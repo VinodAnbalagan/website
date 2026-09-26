@@ -1,0 +1,121 @@
+---
+import Base from '../layouts/Base.astro';
+import { links } from '../data/site';
+
+const knobs = [
+  { k: 'Learning rule', d: 'Backprop versus local and biologically inspired alternatives.', now: false },
+  { k: 'Architecture', d: 'Symmetry and equivariance built into the network.', now: false },
+  { k: 'Objective', d: 'Predictive world models: physical state or surface statistics?', now: true },
+];
+---
+<Base title="Research" description="Reverie, a world-model interpretability study, and CulturalRiddles, a multicultural riddles benchmark.">
+  <header class="page-head narrow">
+    <p class="eyebrow">Research</p>
+    <h1>When a model succeeds, has it learned the structure, or the surface cues?</h1>
+    <p class="lede">
+      One question runs through the work: what changes in a model's internal representations when
+      you constrain how it learns. I answer it with probes and causal interventions rather than benchmark scores.
+    </p>
+  </header>
+
+  <section class="narrow program reveal">
+    <p class="eyebrow">The programme · one question, three knobs, one toolkit</p>
+    <div class="knobs">
+      {knobs.map((x) => (
+        <div class:list={['knob', { now: x.now }]}>
+          <span class="mono label">{x.now ? 'now' : 'later'}</span>
+          <h3>{x.k}</h3>
+          <p>{x.d}</p>
+        </div>
+      ))}
+    </div>
+    <p class="meta tools">Instruments held constant: linear and nonlinear probing · activation patching · dynamical-systems analysis · matched baselines and registered negative results</p>
+  </section>
+
+  <article id="reverie" class="narrow paper reveal">
+    <div class="tags">
+      <span class="pill live">In progress</span>
+      <span class="pill">Pre-registered</span>
+      <span class="pill">World models · interpretability</span>
+    </div>
+    <h2>Reverie</h2>
+    <p class="subtitle">Does a world model represent what it cannot see?</p>
+
+    <h4 class="mono">Abstract</h4>
+    <p>
+      World models trained on video are often said to learn physics. Reverie tests one narrow version
+      of that claim. A recurrent state-space model (RSSM) is trained on simulated video of balls bouncing
+      and colliding in a box, with no physics in the loss. When a ball passes behind an occluder, we ask
+      two questions: is its position still decodable from the model's internal state, and is that
+      representation causally used to predict where the ball reappears?
+    </p>
+    <p>
+      Decodability is measured with probes of increasing capacity, reported as selectivity against a
+      randomly initialised encoder. Causal use is tested by patching the recurrent state with a
+      counterfactual trajectory, against a matched-norm random-direction control. The central control is
+      hidden collisions: collisions behind the occluder that no extrapolation can predict, which separate
+      learned dynamics from straight-line continuation. Results will be validated on CLEVRER.
+    </p>
+    <p class="meta">RSSM · linear and MLP probes · activation patching · CLEVRER · JAX</p>
+    <p class="note">The animation on the <a href="/">home page</a> illustrates the hidden-collision control. It is a sketch of the question, not model output.</p>
+  </article>
+
+  <article id="culturalriddles" class="narrow paper reveal">
+    <div class="tags">
+      <span class="pill live">MRL 2026</span>
+      <span class="pill">First author</span>
+      <span class="pill">Multilingual evaluation</span>
+    </div>
+    <h2>CulturalRiddles</h2>
+    <p class="subtitle">A multicultural benchmark of riddles across 51 languages.</p>
+
+    <p class="venue mono">To be presented at MRL 2026 · being submitted to TACL · arXiv preprint coming soon</p>
+
+    <p>
+      Riddles are a setting where surface fluency and real understanding come apart sharply. A model
+      can produce perfect Tamil and still miss what a Tamil riddle is actually about. CulturalRiddles
+      collects around 6,100 riddles written by native speakers from 61+ language communities, and
+      evaluates how well language models solve them in the cultural context they come from.
+    </p>
+    <ul class="role">
+      <li>First author and cross-team lead, with the Cohere Labs Open Science Community</li>
+      <li>Led data creation, validation, evaluation and analysis</li>
+      <li>Coordinated 100+ contributors across data, evaluation and analysis tracks</li>
+      <li>A living dataset: new communities keep joining</li>
+      <li>Designed the canonical schema, the benchmarking pipeline and the dataset release</li>
+    </ul>
+    <p class="meta">Paper, dataset and code will be linked here on publication.</p>
+  </article>
+
+  <section class="narrow reveal next">
+    <p>
+      The <a href="/lab">Lab</a> is where the smaller experiments live: eight measured, interactive
+      studies that build the toolkit Reverie depends on. Follow along on <a href={links.substack} target="_blank" rel="noopener">The Meta Gradient</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .program { margin-bottom: 1rem; }
+  .knobs { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
+  .knob { border: 1px solid var(--rule); border-radius: 14px; padding: 1.1rem 1.1rem 1rem; background: var(--bg-raised); }
+  .knob.now { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .knob h3 { font-size: 1.15rem; margin: .4rem 0 .35rem; }
+  .knob p { font-size: .95rem; color: var(--ink-soft); margin: 0; }
+  .label { font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+  .knob.now .label { color: var(--accent); }
+  .tools { margin-top: 1rem; }
+  @media (max-width: 640px) { .knobs { grid-template-columns: 1fr; } }
+
+  .paper { padding: 3.5rem 0 1rem; border-top: 1px solid var(--rule); margin-top: 3rem; scroll-margin-top: 80px; }
+  .tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.2rem; }
+  .paper h2 { font-size: clamp(2rem, 4vw, 2.7rem); }
+  .subtitle { font-style: italic; color: var(--ink-soft); font-size: 1.3rem; margin: .3rem 0 1.8rem; }
+  h4.mono { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); font-weight: 500; margin: 0 0 .8rem; }
+  .venue { font-size: .8rem; color: var(--accent); border-left: 2px solid var(--accent); padding: .2rem 0 .2rem .8rem; margin-bottom: 1.5rem; }
+  .role { padding-left: 1.1rem; color: var(--ink-soft); }
+  .role li { margin-bottom: .3rem; }
+  .role li::marker { color: var(--accent); }
+  .note { font-size: .95rem; color: var(--ink-soft); font-style: italic; }
+  .next { border-top: 1px solid var(--rule); margin-top: 3rem; padding-top: 2rem; color: var(--ink-soft); }
+</style>

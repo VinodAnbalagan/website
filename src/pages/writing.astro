@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import { writing, links, fmtDate } from '../data/site';
+
+const groups = ['Learning & world models', 'Data & evaluation', 'Perspectives'] as const;
+---
+<Base title="Writing" description="Essays from The Meta Gradient on world models, learning, data and evaluation.">
+  <header class="page-head narrow">
+    <p class="eyebrow">Writing · The Meta Gradient</p>
+    <h1>From code to consciousness.</h1>
+    <p class="lede">Technical essays with the philosophical bits left in. Each tries to build a visual intuition alongside the formal version.</p>
+    <a class="btn" href={links.substack} target="_blank" rel="noopener">Subscribe on Substack <span class="arrow">→</span></a>
+  </header>
+
+  {groups.map((g) => (
+    <section class="narrow group reveal">
+      <p class="eyebrow">{g}</p>
+      <ol>
+        {writing.filter((e) => e.group === g).sort((a, b) => b.date.localeCompare(a.date)).map((e) => (
+          <li>
+            <a href={e.href} target="_blank" rel="noopener">
+              <span class="t">{e.title}</span>
+              <span class="d">{e.dek}</span>
+              <span class="meta">{fmtDate(e.date)}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </section>
+  ))}
+</Base>
+
+<style>
+  .group { margin-top: 2.5rem; }
+  ol { list-style: none; padding: 0; margin: 0; }
+  li { border-top: 1px solid var(--rule); }
+  li a { display: grid; gap: .2rem; padding: 1.2rem 0; text-decoration: none; }
+  .t { font-size: 1.4rem; line-height: 1.25; }
+  .d { color: var(--ink-soft); }
+  li a:hover .t { color: var(--accent); }
+  .page-head .btn { font-size: .85rem; padding: .55em 1em; }
+</style>

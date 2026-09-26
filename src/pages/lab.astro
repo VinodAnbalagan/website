@@ -1,0 +1,88 @@
+---
+import Base from '../layouts/Base.astro';
+import { lab, labPrinciples } from '../data/site';
+
+const statusLabel = { planned: 'Planned', next: 'Up next', building: 'Building', shipped: 'Live' } as const;
+const shipped = lab.filter((p) => p.status === 'shipped').length;
+---
+<Base title="Lab" description="Eight small, measured, interactive experiments on learning, representations, dynamics and computation.">
+  <header class="page-head wrap">
+    <p class="eyebrow">The Lab · {shipped} of {lab.length} live</p>
+    <h1>Learning, representations,<br />dynamics, computation.</h1>
+    <p class="lede">
+      Eight small experiments, each built from scratch, each asking one question, each running live in
+      your browser. Together they are the ladder that leads to Reverie.
+    </p>
+  </header>
+
+  <section class="wrap principles">
+    {labPrinciples.map(([h, d], i) => (
+      <div class="reveal">
+        <span class="mono idx">0{i + 1}</span>
+        <h3>{h}</h3>
+        <p>{d}</p>
+      </div>
+    ))}
+  </section>
+
+  <section class="wrap ladder">
+    <ol>
+      {lab.map((p) => {
+        const Tag = p.href ? 'a' : 'div';
+        return (
+          <li class:list={['reveal', p.status, { flagship: p.flagship }]}>
+            <span class="node mono">{p.n}</span>
+            <Tag class="item card" href={p.href}>
+              <div class="top">
+                <span class="pill theme">{p.theme}</span>
+                {p.flagship && <span class="pill">Flagship</span>}
+                <span class:list={['pill', { live: p.status !== 'planned' }]}>{statusLabel[p.status]}</span>
+              </div>
+              <h3>{p.title}</h3>
+              <p class="q">{p.question}</p>
+              <p class="meta">Scaling ladder · {p.ladder}</p>
+            </Tag>
+          </li>
+        );
+      })}
+      <li class="reveal destination">
+        <span class="node mono">→</span>
+        <a class="item card" href="/research#reverie">
+          <div class="top"><span class="pill live">Research</span></div>
+          <h3>Reverie</h3>
+          <p class="q">The full study: does a world model represent what it cannot see, and does it use it?</p>
+        </a>
+      </li>
+    </ol>
+  </section>
+</Base>
+
+<style>
+  .principles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; padding: 1rem 0 3rem; border-bottom: 1px solid var(--rule); }
+  .principles h3 { font-size: 1.1rem; margin: .4rem 0 .3rem; }
+  .principles p { font-size: .95rem; color: var(--ink-soft); margin: 0; }
+  .idx { font-size: .7rem; color: var(--accent); }
+  @media (max-width: 860px) { .principles { grid-template-columns: 1fr 1fr; } }
+
+  .ladder ol { list-style: none; margin: 3rem 0 0; padding: 0; position: relative; }
+  .ladder ol::before { content: ''; position: absolute; left: 22px; top: 10px; bottom: 30px; width: 1px; background: linear-gradient(var(--rule), var(--accent)); }
+  .ladder li { display: grid; grid-template-columns: 46px 1fr; gap: 1.2rem; margin-bottom: 1.1rem; }
+  .node {
+    position: relative; z-index: 1; width: 46px; height: 46px; border-radius: 50%;
+    display: grid; place-items: center; font-size: .8rem;
+    background: var(--bg); border: 1px solid var(--rule); color: var(--ink-faint);
+  }
+  li.next .node, li.building .node { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+  li.shipped .node { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  li.destination .node { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  .item { padding: 1.3rem 1.5rem; }
+  li.planned .item { opacity: .78; box-shadow: none; }
+  li.planned .item:hover { opacity: 1; }
+  li.flagship .item { border-style: dashed; }
+  .top { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .theme { color: var(--ink-faint); }
+  .item h3 { margin: .8rem 0 .35rem; font-size: 1.45rem; }
+  .q { color: var(--ink-soft); margin-bottom: .6rem; }
+  .item .meta { margin: 0; }
+</style>

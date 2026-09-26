@@ -1,0 +1,30 @@
+---
+import { links, site } from '../data/site';
+const year = new Date().getFullYear();
+---
+<footer class="site">
+  <div class="wrap row">
+    <div>
+      <p class="name">{site.name}</p>
+      <p class="meta">Understanding by implementing. Measuring before concluding.</p>
+    </div>
+    <ul class="sans">
+      <li><a href={links.linkedin} rel="me noopener" target="_blank">LinkedIn</a></li>
+      <li><a href={links.github} rel="me noopener" target="_blank">GitHub</a></li>
+      <li><a href={links.huggingface} rel="me noopener" target="_blank">Hugging Face</a></li>
+      <li><a href={links.substack} rel="me noopener" target="_blank">The Meta Gradient</a></li>
+      <li><a href={`mailto:${site.email}`}>Email</a></li>
+    </ul>
+  </div>
+  <div class="wrap meta small">© {year} {site.name}</div>
+</footer>
+
+<style>
+  footer.site { border-top: 1px solid var(--rule); margin-top: 4rem; padding: 2.5rem 0 2rem; }
+  .row { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: space-between; align-items: flex-start; }
+  .name { font-size: 1.15rem; margin: 0 0 .2rem; }
+  ul { list-style: none; display: flex; flex-wrap: wrap; gap: .4rem 1.3rem; padding: 0; margin: 0; font-size: .9rem; }
+  ul a { text-decoration: none; color: var(--ink-soft); }
+  ul a:hover { color: var(--accent); }
+  .small { margin-top: 1.8rem; font-size: .7rem; }
+</style>

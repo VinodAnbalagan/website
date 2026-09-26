@@ -1,0 +1,286 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, links } from '../data/site';
+
+const HF = 'https://huggingface.co/';
+
+const selected = [
+  {
+    title: 'Reverie: Does a World Model Represent What It Cannot See?',
+    org: 'Independent research · Pre-registered',
+    date: '2026 to present',
+    body: 'Probing and activation patching of an RSSM world model trained on simulated physics video with no physics in the loss. Tests whether an occluded object’s position stays decodable from the latent state and whether that representation is causally used, with hidden collisions as the central control and CLEVRER for validation.',
+    links: [{ label: 'Abstract', href: '/research#reverie' }],
+  },
+  {
+    title: 'CulturalRiddles: Multicultural Riddles Benchmark',
+    org: 'Cohere Labs Open Science Community · First author',
+    date: 'Apr 2026 to present',
+    badge: 'MRL 2026',
+    body: 'Living cultural-reasoning benchmark: 51 languages, 61+ communities, about 6,100 riddles, 100+ contributors. To be presented at MRL 2026, being submitted to TACL, arXiv preprint coming soon.',
+    links: [{ label: 'Research page', href: '/research#culturalriddles' }],
+  },
+  {
+    title: 'Adaption Labs AutoScientist Challenge',
+    org: '2nd place, Data & Visualization track · $1,000 prize',
+    date: '2026',
+    badge: '2nd place',
+    body: 'Adaption Charts P2: synthetic multimodal dataset for chart QA and chart-to-table extraction, built so difficulty comes from reading the chart (truncated axes, missing labels, varied visual styles) rather than from arithmetic. Paired Llama-3.2-3B LoRA adapter for table-grounded QA.',
+    links: [
+      { label: 'Dataset', href: HF + 'datasets/vinod-anbalagan/adaption-charts-p2' },
+      { label: 'Adapter', href: HF + 'vinod-anbalagan/Llama-3.2-3B-marketing-spend-revenue-qa' },
+    ],
+  },
+  {
+    title: 'DocuNative: Offline Multilingual Document QA',
+    org: 'Cohere Expedition Hackathon · Pipeline lead, 7-person team, one week',
+    date: 'Mar 2026',
+    body: 'Fully offline document QA for newcomers and migrants; nothing leaves the user’s machine. PDF extraction, BGE-M3 embeddings, ChromaDB retrieval, Aya generation and mDeBERTa hallucination checks. 9,000+ automated evaluations across Chinese, Hindi and Polish showed cross-lingual embedding quality, not the LLM, was the main retrieval bottleneck.',
+    links: [
+      { label: 'Code', href: 'https://github.com/docunative-AI/docunative' },
+      { label: 'Write-up', href: links.substack + '/p/on-building-offline-ai-for-people' },
+    ],
+  },
+  {
+    title: 'Tamil Agricultural Advisory Dataset',
+    org: 'Adaption Labs Uncharted Data Challenge · Grade A (9.4/10)',
+    date: '2026',
+    body: '187 curated Q&A records across 20 categories and 48 crops, built from public-sector sources over ten iterative submissions. Honorary recognition from Sara Hooker. Follow-up: an 11-language Indian agricultural dataset.',
+    links: [
+      { label: 'Dataset', href: HF + 'datasets/vinod-anbalagan/tamil-agri-advisory-qa' },
+      { label: '11-language', href: HF + 'datasets/vinod-anbalagan/indian-agri-advice-multilingual' },
+    ],
+  },
+];
+
+const experience = [
+  {
+    role: 'First Author, Multicultural Riddles Benchmark',
+    org: 'Cohere Labs Open Science Community · Remote',
+    date: 'Apr 2026 to present',
+    points: [
+      'Lead data creation, validation, evaluation and analysis for a benchmark spanning 51 languages and about 6,100 riddles.',
+      'Align 100+ contributors from 61+ communities across data, evaluation and analysis tracks on schema design, validation rules and release requirements.',
+      'Built Python tooling that turns validator output into contributor-actionable guidance, improving annotation consistency and cutting review cycles.',
+      'Designed the canonical schema, benchmarking pipeline and structured dataset releases on GitHub and Hugging Face.',
+    ],
+  },
+  {
+    role: 'Independent ML Research & Engineering',
+    org: 'The Meta Gradient · Toronto (Remote)',
+    date: 'Oct 2025 to present',
+    points: [
+      'Study representations, loss landscapes and learning dynamics; currently probing world models for hidden physical state (Reverie).',
+      'Build and release public ML artifacts: reproducible code, model adapters, datasets and implementation-focused technical writing.',
+    ],
+  },
+  {
+    role: 'Machine Learning Engineer Intern',
+    org: 'M2M Tech · Vancouver (Remote)',
+    date: 'Feb 2025 to Oct 2025',
+    points: [
+      'Built end-to-end Python ML pipelines: data cleaning, feature engineering, XGBoost training, hyperparameter tuning and probability calibration.',
+      'Evaluated models through structured experiments and deployed real-time inference with Docker, FastAPI and Hugging Face Spaces.',
+    ],
+  },
+  {
+    role: 'Buyer / Procurement Analyst',
+    org: 'Whole Foods Market · Toronto',
+    date: 'Nov 2021 to Apr 2023',
+    points: [
+      'Forecast demand and optimised inventory against a $50K monthly budget in a perishable category, where forecast errors carried direct cost.',
+      'Ran quarterly analysis of sales, waste, inventory and vendor performance to balance stock against demand and reduce shrink.',
+    ],
+  },
+];
+
+const skills = [
+  ['Research', 'JAX · Equinox · PyTorch · probing · causal intervention · experiment design · pre-registration'],
+  ['ML / DL', 'Transformers · LoRA/PEFT · state space models · scikit-learn · XGBoost · calibration'],
+  ['NLP & retrieval', 'Hugging Face · embeddings · RAG · ChromaDB · multilingual NLP · LLM-as-judge'],
+  ['Data', 'Pandas · NumPy · dataset curation · schema design · validation · benchmark construction'],
+  ['Systems', 'Docker · FastAPI · W&B · MLflow · AWS · Git · Linux'],
+  ['Visualisation', 'Matplotlib · Seaborn · Plotly · Marimo · Tableau'],
+  ['Languages', 'Python · SQL · Bash · Go (learning)'],
+];
+
+const education = [
+  { d: 'MASc, Electronic & Computer Science Engineering', s: 'University of Windsor', y: '2010 to 2012', n: 'Thesis: FPGA implementation of face recognition using Eigenfaces' },
+  { d: 'BE, Electronics & Communication Engineering', s: 'Anna University', y: '2004 to 2008' },
+  { d: 'Machine Learning Foundations', s: 'University of Toronto', y: '2025' },
+];
+
+const certs = [
+  'Cohere Labs ML Summer School (2026)',
+  'Wolfram · ML Statistical Foundations',
+  'NVIDIA · AI Infrastructure & Operations',
+  'Stanford Online · ML Specialization',
+  'Microsoft Azure AI-900',
+  'OpenEDG · Python Professional',
+];
+
+const contact = [
+  { label: 'Email', value: site.email, href: `mailto:${site.email}` },
+  { label: 'LinkedIn', value: 'in/vinod-anbalagan', href: links.linkedin },
+  { label: 'GitHub', value: 'VinodAnbalagan', href: links.github },
+  { label: 'Hugging Face', value: 'vinod-anbalagan', href: links.huggingface },
+  { label: 'Substack', value: 'The Meta Gradient', href: links.substack },
+];
+
+const essays = [
+  { t: 'Freezing the Noise', d: 'How one line of algebra made sampling differentiable', h: links.substack + '/p/freezing-the-noise' },
+  { t: 'The Architecture of Dreams', d: 'How neural networks learned to imagine', h: links.substack + '/p/the-architecture-of-dreams-how-neural' },
+  { t: 'Finding the Manifold', d: 'Where neural networks land', h: links.substack + '/p/finding-the-manifold-where-neural' },
+];
+---
+<Base title="CV" description="Curriculum vitae of Vinod Anbalagan, ML engineer and independent researcher.">
+  <div class="wrap cv">
+    <aside class="side">
+      <div class="sticky">
+        <p class="eyebrow">Curriculum vitae</p>
+        <h1>Vinod<br />Anbalagan</h1>
+        <p class="headline">{site.headline}</p>
+        <p class="meta">Toronto, Canada</p>
+
+        <ul class="contact">
+          {contact.map((c) => (
+            <li><span class="meta">{c.label}</span><a href={c.href} target={c.href.startsWith('http') ? '_blank' : undefined} rel="noopener">{c.value}</a></li>
+          ))}
+        </ul>
+
+        <button class="btn no-print" type="button" onclick="window.print()">Save as PDF <span class="arrow">↓</span></button>
+
+        <div class="skills">
+          <p class="eyebrow">Skills</p>
+          <dl>
+            {skills.map(([k, v]) => (<><dt class="mono">{k}</dt><dd>{v}</dd></>))}
+          </dl>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main">
+      <section>
+        <p class="summary">
+          Machine learning engineer and independent researcher working on world models and representation
+          learning: what a model actually represents, and whether it has learned the structure of a problem
+          or only the surface cues that correlate with it.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="sec">Research direction</h2>
+        <p>
+          My current work probes predictive world models, using probing and causal intervention to test
+          whether they keep physical state they can no longer see, or only predictive surface statistics
+          (<a href="/research#reverie">Reverie</a>). The broader programme asks what changes in a model’s
+          representations when you constrain how it learns, through its update rule, its architecture or its objective.
+        </p>
+        <p class="dim">
+          Alongside this: first author on CulturalRiddles, a 51-language benchmark with Cohere Labs, and 2nd place
+          in the Adaption Labs AutoScientist Challenge. Background in electronic and computer engineering, and a
+          decade of forecasting in real operations.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="sec">Selected work</h2>
+        {selected.map((w) => (
+          <div class="entry">
+            <div class="head">
+              <h3>{w.title}</h3>
+              <span class="meta">{w.date}</span>
+            </div>
+            <p class="org">{w.org}</p>
+            <p>{w.body}</p>
+            <p class="links">
+              {w.links.map((l) => (<a class="chip" href={l.href} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noopener">{l.label} ↗</a>))}
+            </p>
+          </div>
+        ))}
+        <p class="more">Plus six public datasets and a LoRA adapter on <a href={links.huggingface} target="_blank" rel="noopener">Hugging Face</a> (580+ downloads).</p>
+      </section>
+
+      <section>
+        <h2 class="sec">Experience</h2>
+        {experience.map((e) => (
+          <div class="entry">
+            <div class="head">
+              <h3>{e.role}</h3>
+              <span class="meta">{e.date}</span>
+            </div>
+            <p class="org">{e.org}</p>
+            <ul>{e.points.map((p) => <li>{p}</li>)}</ul>
+          </div>
+        ))}
+      </section>
+
+      <section>
+        <h2 class="sec">Selected writing · The Meta Gradient</h2>
+        <ul class="plain">
+          {essays.map((e) => (<li><a href={e.h} target="_blank" rel="noopener">{e.t}</a> <span class="dim">· {e.d}</span></li>))}
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="sec">Education</h2>
+        {education.map((e) => (
+          <div class="entry tight">
+            <div class="head"><h3>{e.d}</h3><span class="meta">{e.y}</span></div>
+            <p class="org">{e.s}</p>
+            {e.n && <p class="dim">{e.n}</p>}
+          </div>
+        ))}
+        <h2 class="sec">Certifications</h2>
+        <ul class="certs">{certs.map((c) => <li>{c}</li>)}</ul>
+      </section>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .cv { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: clamp(2rem, 5vw, 4.5rem); padding: clamp(3rem, 7vw, 5rem) 0 2rem; }
+  .sticky { position: sticky; top: 90px; }
+  .side h1 { font-size: clamp(2.2rem, 4vw, 2.9rem); margin-bottom: .9rem; }
+  .headline { color: var(--ink-soft); font-size: 1.05rem; line-height: 1.45; margin-bottom: .3rem; }
+  .contact { list-style: none; padding: 0; margin: 1.6rem 0; border-top: 1px solid var(--rule); }
+  .contact li { display: grid; grid-template-columns: 92px 1fr; align-items: baseline; padding: .45rem 0; border-bottom: 1px solid var(--rule); font-family: 'Inter', system-ui, sans-serif; font-size: .88rem; }
+  .contact a { text-decoration: none; overflow-wrap: anywhere; }
+  .contact a:hover { color: var(--accent); }
+  .skills { margin-top: 2rem; }
+  dl { margin: 0; }
+  dt { font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-top: .8rem; }
+  dd { margin: .15rem 0 0; font-family: 'Inter', system-ui, sans-serif; font-size: .85rem; color: var(--ink-soft); line-height: 1.5; }
+
+  .main section { margin-bottom: 2.6rem; }
+  .summary { font-size: clamp(1.2rem, 2vw, 1.4rem); line-height: 1.55; }
+  .sec { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); font-weight: 500; padding-bottom: .6rem; border-bottom: 1px solid var(--rule); margin: 0 0 1.3rem; }
+  .entry { margin-bottom: 1.6rem; }
+  .entry.tight { margin-bottom: 1rem; }
+  .head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+  .entry h3 { font-size: 1.22rem; }
+  .org { font-family: 'Inter', system-ui, sans-serif; font-size: .88rem; color: var(--accent); margin: .2rem 0 .5rem; }
+  .entry p, .entry li { color: var(--ink-soft); font-size: 1.02rem; }
+  .entry ul { padding-left: 1.1rem; margin: 0; }
+  .entry li { margin-bottom: .3rem; }
+  .entry li::marker { color: var(--ink-faint); }
+  .links { display: flex; gap: .5rem; flex-wrap: wrap; }
+  .chip { font-family: 'Inter', system-ui, sans-serif; font-size: .78rem; text-decoration: none; padding: .25em .7em; border: 1px solid var(--rule); border-radius: 999px; color: var(--ink-soft); }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .more, .dim { color: var(--ink-soft); font-size: .98rem; }
+  .plain { list-style: none; padding: 0; margin: 0; }
+  .plain li { padding: .35rem 0; }
+  .certs { columns: 2; padding-left: 1.1rem; color: var(--ink-soft); font-size: .98rem; }
+  .certs li { margin-bottom: .25rem; }
+
+  @media (max-width: 860px) {
+    .cv { grid-template-columns: 1fr; }
+    .sticky { position: static; }
+  }
+  @media print {
+    .cv { grid-template-columns: 210px 1fr; gap: 1.5rem; padding: 0; }
+    .sticky { position: static; }
+    .chip { border: 0; padding: 0; }
+    .entry { break-inside: avoid; }
+  }
+</style>

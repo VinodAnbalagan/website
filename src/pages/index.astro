@@ -1,0 +1,113 @@
+---
+import Base from '../layouts/Base.astro';
+import OcclusionHero from '../components/OcclusionHero.astro';
+import { site, links, lab, writing, fmtDate } from '../data/site';
+
+const latest = [...writing].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3);
+const nextLab = lab.find((p) => p.status === 'next' || p.status === 'building') ?? lab[0];
+---
+<Base>
+  <section class="hero wrap">
+    <div class="intro">
+      <p class="eyebrow"><span class="dot">●</span> {site.role}</p>
+      <h1>Vinod Anbalagan</h1>
+      <p class="lede">{site.identity}</p>
+      <div class="ctas">
+        <a class="btn primary" href="/research">Research <span class="arrow">→</span></a>
+        <a class="btn" href="/lab">The Lab</a>
+        <a class="btn" href="/cv">CV</a>
+      </div>
+    </div>
+    <div class="figure">
+      <OcclusionHero />
+    </div>
+  </section>
+
+  <section class="block wrap">
+    <p class="eyebrow">Now</p>
+    <div class="grid-3">
+      <a class="card reveal" href="/research#reverie">
+        <span class="pill live">In progress</span>
+        <h3>Reverie</h3>
+        <p>Does a world model represent what it cannot see? Probing and patching an RSSM while a ball is hidden behind an occluder.</p>
+        <span class="meta">Research · world models</span>
+      </a>
+      <a class="card reveal" href="/research#culturalriddles">
+        <span class="pill">MRL 2026</span>
+        <h3>CulturalRiddles</h3>
+        <p>First author on a living multicultural riddles benchmark: 51 languages, 61+ communities, with the Cohere Labs Open Science Community.</p>
+        <span class="meta">Research · evaluation</span>
+      </a>
+      <a class="card reveal" href="/lab">
+        <span class="pill">Lab {nextLab.n} · up next</span>
+        <h3>{nextLab.title}</h3>
+        <p>{nextLab.question}</p>
+        <span class="meta">One of eight small, live, measured experiments</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="block wrap">
+    <div class="split">
+      <div>
+        <p class="eyebrow">Writing · The Meta Gradient</p>
+        <h2>Building and breaking AI systems to understand them.</h2>
+        <p class="sub">Visual intuition first, formal version second, and the philosophical bits left in.</p>
+        <a class="btn" href="/writing">All writing <span class="arrow">→</span></a>
+      </div>
+      <ol class="essays">
+        {latest.map((e) => (
+          <li class="reveal">
+            <a href={e.href} target="_blank" rel="noopener">
+              <span class="meta">{fmtDate(e.date)}</span>
+              <span class="t">{e.title}</span>
+              <span class="d">{e.dek}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="block wrap">
+    <div class="open card">
+      <p class="eyebrow">Open to</p>
+      <p class="open-text">{site.openTo}</p>
+      <div class="ctas">
+        <a class="btn primary" href={links.linkedin} target="_blank" rel="noopener">Message on LinkedIn <span class="arrow">→</span></a>
+        <a class="btn" href={`mailto:${site.email}`}>Email</a>
+        <a class="btn" href="/cv">View CV</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    display: grid; gap: clamp(2rem, 5vw, 4rem);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    align-items: center; padding: clamp(3rem, 8vw, 6.5rem) 0 clamp(3rem, 6vw, 5rem);
+  }
+  .hero h1 { margin-bottom: 1.2rem; }
+  .ctas { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.8rem; }
+  @media (max-width: 900px) { .hero { grid-template-columns: 1fr; } }
+
+  .card h3 { margin: 1rem 0 .5rem; }
+  .card p { color: var(--ink-soft); font-size: 1.02rem; }
+
+  .split { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(2rem, 5vw, 4rem); }
+  .split h2 { margin-bottom: .8rem; }
+  .sub { color: var(--ink-soft); }
+  @media (max-width: 820px) { .split { grid-template-columns: 1fr; } }
+
+  .essays { list-style: none; padding: 0; margin: 0; }
+  .essays li { border-top: 1px solid var(--rule); }
+  .essays li:last-child { border-bottom: 1px solid var(--rule); }
+  .essays a { display: grid; gap: .15rem; padding: 1.1rem 0; text-decoration: none; }
+  .essays .t { font-size: 1.3rem; }
+  .essays .d { color: var(--ink-soft); font-size: 1rem; }
+  .essays a:hover .t { color: var(--accent); }
+
+  .open { padding: clamp(1.8rem, 4vw, 3rem); }
+  .open-text { font-size: clamp(1.15rem, 2vw, 1.4rem); max-width: 52ch; margin: 0; }
+</style>
