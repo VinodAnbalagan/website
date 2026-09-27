@@ -10,7 +10,7 @@ export const site = {
     'Vinod Anbalagan: ML engineer and independent researcher working on world models, representation learning and evaluation.',
   email: 'vinodanbalagan@gmail.com',
   openTo:
-    'MS and PhD positions, research internships, and research engineer, ML engineer or applied scientist roles on teams working on world models, multimodal AI, representation learning or scientific ML. Europe, Canada or the US. Available immediately.',
+    'Open to research engineer, research assistant, and research internship opportunities, as well as funded MS/PhD positions, in world models, representation learning, multimodal AI, robotics, and scientific ML.',
 };
 
 export const links = {
