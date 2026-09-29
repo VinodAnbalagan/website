@@ -17,7 +17,7 @@ const selected = [
     org: 'Cohere Labs Open Science Community · First author',
     date: 'Apr 2026 to present',
     badge: 'MRL 2026',
-    body: 'Living cultural-reasoning benchmark: 51 languages, 61+ communities, about 6,100 riddles, 100+ contributors. To be presented at MRL 2026, being submitted to TACL, arXiv preprint coming soon.',
+    body: 'Living cultural-reasoning benchmark: ~6,100 natively written, human-evaluated riddles across 61 communities and 51 languages, 30 models evaluated, ~100 contributors. To be presented at MRL 2026 in Budapest, submitting to TACL, arXiv preprint coming soon.',
     links: [{ label: 'Research page', href: '/research#culturalriddles' }],
   },
   {
@@ -58,11 +58,13 @@ const experience = [
     role: 'First Author, Multicultural Riddles Benchmark',
     org: 'Cohere Labs Open Science Community · Remote',
     date: 'Apr 2026 to present',
+    venue: 'To be presented at MRL 2026, Budapest · Submitting to TACL · arXiv preprint coming soon',
     points: [
-      'Lead data creation, validation, evaluation and analysis for a benchmark spanning 51 languages and about 6,100 riddles.',
-      'Align 100+ contributors from 61+ communities across data, evaluation and analysis tracks on schema design, validation rules and release requirements.',
-      'Built Python tooling that turns validator output into contributor-actionable guidance, improving annotation consistency and cutting review cycles.',
-      'Designed the canonical schema, benchmarking pipeline and structured dataset releases on GitHub and Hugging Face.',
+      'Lead the data, publishing, and analysis infrastructure for a multilingual cultural-reasoning benchmark of ~6,100 natively written, human-evaluated riddles across 61 communities and 51 languages (paper in preparation).',
+      'Built the self-serve contribution pipeline: fork-based submissions auto-validated on each pull request via GitHub Actions, plus a one-command publisher that rebuilds the dataset and ships versioned releases to Hugging Face with contributor credits and ISO language codes, so the benchmark keeps growing after release without the core team.',
+      'Built a public results dashboard on Hugging Face Spaces with per-model, per-culture, difficulty, and error-type views, every figure reconciled to the human-evaluation source data.',
+      'Owned data integrity across 30 evaluated models: caught scoring-definition and coverage issues that were inflating results, added automated reconciliation checks, and ran an annotation audit that led to re-validating a community whose scores were unreliable.',
+      'Coordinated ~100 contributors across writing, validation, and evaluation on shared schema, validation rules, and release requirements, and built Python tooling that turns validator output into contributor-ready feedback to speed up review.',
     ],
   },
   {
@@ -210,6 +212,7 @@ const essays = [
               <span class="meta">{e.date}</span>
             </div>
             <p class="org">{e.org}</p>
+            {e.venue && <p class="venue">{e.venue}</p>}
             <ul>{e.points.map((p) => <li>{p}</li>)}</ul>
           </div>
         ))}
@@ -262,6 +265,7 @@ const essays = [
   .org { font-family: 'Inter', system-ui, sans-serif; font-size: .88rem; color: var(--accent); margin: .2rem 0 .5rem; }
   .entry p, .entry li { color: var(--ink-soft); font-size: 1.02rem; }
   .entry ul { padding-left: 1.1rem; margin: 0; }
+  .venue { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: .74rem !important; color: var(--ink-faint) !important; margin: 0 0 .6rem; }
   .entry li { margin-bottom: .3rem; }
   .entry li::marker { color: var(--ink-faint); }
   .links { display: flex; gap: .5rem; flex-wrap: wrap; }
