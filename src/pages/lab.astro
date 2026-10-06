@@ -5,13 +5,14 @@ import { lab, labPrinciples } from '../data/site';
 const statusLabel = { planned: 'Planned', next: 'Up next', building: 'Building', shipped: 'Live' } as const;
 const shipped = lab.filter((p) => p.status === 'shipped').length;
 ---
-<Base title="Lab" description="Eight small, measured, interactive experiments on learning, representations, dynamics and computation.">
+<Base title="Lab" description="Building a world model, one component at a time: eight from-scratch experiments that assemble a small TD-MPC-style agent.">
   <header class="page-head wrap">
     <p class="eyebrow">The Lab · {shipped} of {lab.length} live</p>
-    <h1>Learning, representations,<br />dynamics, computation.</h1>
+    <h1>Building a world model,<br />one component at a time.</h1>
     <p class="lede">
-      Eight small experiments, each built from scratch, each asking one question, each running live in
-      your browser. Together they are the ladder that leads to Reverie.
+      Eight experiments, each built from scratch, each asking one question about one part of a
+      model-based agent: dynamics, representation, memory, planning, value. Together they assemble a
+      small TD-MPC-style agent, which becomes the subject of Reverie.
     </p>
   </header>
 
@@ -48,9 +49,9 @@ const shipped = lab.filter((p) => p.status === 'shipped').length;
       <li class="reveal destination">
         <span class="node mono">→</span>
         <a class="item card" href="/research#reverie">
-          <div class="top"><span class="pill live">Research</span></div>
+          <div class="top"><span class="pill live">Capstone</span><span class="pill">Research</span></div>
           <h3>Reverie</h3>
-          <p class="q">The full study: does a world model represent what it cannot see, and does it use it?</p>
+          <p class="q">Does the agent represent what it can't see, and does intervening on that representation change its plans?</p>
         </a>
       </li>
     </ol>
@@ -58,6 +59,7 @@ const shipped = lab.filter((p) => p.status === 'shipped').length;
 </Base>
 
 <style>
+  .page-head .lede { max-width: 58ch; }
   .principles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; padding: 1rem 0 3rem; border-bottom: 1px solid var(--rule); }
   .principles h3 { font-size: 1.1rem; margin: .4rem 0 .3rem; }
   .principles p { font-size: .95rem; color: var(--ink-soft); margin: 0; }

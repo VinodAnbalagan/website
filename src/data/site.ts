@@ -27,78 +27,37 @@ export interface LabProject {
   title: string;
   question: string;
   ladder: string;
-  theme: 'Learning' | 'Representations' | 'Dynamics' | 'Computation';
+  theme: 'Foundations' | 'Dynamics' | 'Representations' | 'Memory' | 'Planning' | 'Value' | 'Agent';
   status: Status;
   flagship?: boolean;
-  href?: string; // set once the article exists, e.g. '/lab/01-search-landscapes'
+  href?: string; // set once the article exists, e.g. '/lab/01-model-based-vs-model-free'
 }
 
 export const lab: LabProject[] = [
-  {
-    n: '01',
-    title: 'Search Landscapes',
-    question: 'Gradient descent, CEM and evolution strategies: does their ranking flip as dimension grows?',
-    ladder: 'dim 2 → 10 → 100 → 1000',
-    theme: 'Learning',
-    status: 'next',
-  },
-  {
-    n: '02',
-    title: 'Hopfield Memory',
-    question: 'Why is attention a Hopfield network? Classical versus modern storage capacity.',
-    ladder: 'neurons × stored patterns',
-    theme: 'Computation',
-    status: 'planned',
-  },
-  {
-    n: '03',
-    title: 'ODE vs NN',
-    question: 'Does a Hamiltonian inductive bias fix extrapolation and energy drift?',
-    ladder: 'training region, rollout length',
-    theme: 'Dynamics',
-    status: 'planned',
-  },
-  {
-    n: '04',
-    title: 'Latent Observatory',
-    question: 'Which training objective recovers the true generative factors?',
-    ladder: 'MNIST → dSprites → harder',
-    theme: 'Representations',
-    status: 'planned',
-  },
-  {
-    n: '05',
-    title: 'Local Learning',
-    question: 'How fast does the gap to backprop grow with depth?',
-    ladder: 'depth 1 → 2 → 4 → 8',
-    theme: 'Learning',
-    status: 'planned',
-  },
-  {
-    n: '06',
-    title: 'Neural Cellular Automata',
-    question: 'Does growth trained by evolution strategies regenerate differently from growth trained by backprop?',
-    ladder: 'target complexity, grid size',
-    theme: 'Dynamics',
-    status: 'planned',
-    flagship: true,
-  },
-  {
-    n: '07',
-    title: 'Grokking',
-    question: 'How do weight decay and data fraction change which circuit forms?',
-    ladder: 'width, data fraction',
-    theme: 'Representations',
-    status: 'planned',
-  },
-  {
-    n: '08',
-    title: 'Tiny World Model',
-    question: 'How long does the latent keep an object it can no longer see?',
-    ladder: 'occlusion length, latent size',
-    theme: 'Dynamics',
-    status: 'planned',
-  },
+  { n: '01', title: 'Model-Based vs Model-Free', theme: 'Foundations', status: 'next',
+    question: 'How much real experience does a learned model save, and what happens when the model is wrong?',
+    ladder: 'model error rate 0% → 10% → 30% → 50%' },
+  { n: '02', title: 'Compounding Error', theme: 'Dynamics', status: 'planned',
+    question: 'How fast does rollout error compound, and does a physics-informed inductive bias slow it down?',
+    ladder: 'rollout horizon 1 → 10 → 100' },
+  { n: '03', title: 'Latent Observatory', theme: 'Representations', status: 'planned',
+    question: 'Does an encoder trained on raw frames recover position and velocity? Linear probes against ground truth.',
+    ladder: 'number of balls 1 → 2 → 4 → 8' },
+  { n: '04', title: 'To Reconstruct or Not', theme: 'Representations', status: 'planned', flagship: true,
+    question: 'Reconstruction or latent prediction: which world model keeps the state that decisions actually need?',
+    ladder: 'background distractor complexity' },
+  { n: '05', title: 'Object Permanence', theme: 'Memory', status: 'planned',
+    question: 'How long does a recurrent latent keep an object it can no longer see?',
+    ladder: 'occlusion length, latent size' },
+  { n: '06', title: 'Planning in Imagination', theme: 'Planning', status: 'planned',
+    question: "Random shooting, CEM, MPPI and gradient-based planning: when does the planner exploit the model's errors?",
+    ladder: 'horizon, sample count' },
+  { n: '07', title: 'Value vs Horizon', theme: 'Value', status: 'planned',
+    question: 'How much long-horizon planning can a learned value function replace?',
+    ladder: 'horizon 1 → 3 → 5 → 10, with and without value' },
+  { n: '08', title: 'Mini TD-MPC', theme: 'Agent', status: 'planned',
+    question: 'All the pieces in one agent: how close does a from-scratch build get to TD-MPC2, and which component matters most?',
+    ladder: 'component ablations, own environment → DMControl' },
 ];
 
 export const labPrinciples = [
