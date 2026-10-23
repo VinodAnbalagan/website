@@ -1,18 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
-import { lab, labPrinciples } from '../data/site';
+import { reverieLab, afterLab, labPrinciples } from '../data/site';
 
-const statusLabel = { planned: 'Planned', next: 'Up next', building: 'Building', shipped: 'Live' } as const;
-const shipped = lab.filter((p) => p.status === 'shipped').length;
+const statusLabel = { planned: 'Planned', next: 'Up next', building: 'In progress', shipped: 'Live' } as const;
+const shipped = reverieLab.filter((p) => p.status === 'shipped').length;
 ---
-<Base title="Lab" description="Building a world model, one component at a time: eight from-scratch experiments that assemble a small TD-MPC-style agent.">
+<Base title="Lab" description="Building a world model, one component at a time, toward one question: does a world model keep track of what it cannot see, and does it use it?">
   <header class="page-head wrap">
-    <p class="eyebrow">The Lab · {shipped} of {lab.length} live</p>
+    <p class="eyebrow">The Lab · {shipped} of {reverieLab.length} toward the Reverie paper</p>
     <h1>Building a world model,<br />one component at a time.</h1>
     <p class="lede">
-      Eight experiments, each built from scratch, each asking one question about one part of a
-      model-based agent: dynamics, representation, memory, planning, value. Together they assemble a
-      small TD-MPC-style agent, which becomes the subject of Reverie.
+      Toward one question: does a world model keep track of what it cannot see, and does it use it?
     </p>
   </header>
 
@@ -27,21 +25,21 @@ const shipped = lab.filter((p) => p.status === 'shipped').length;
   </section>
 
   <section class="wrap ladder">
+    <h2 class="sec-title">The Reverie paper</h2>
     <ol>
-      {lab.map((p) => {
+      {reverieLab.map((p) => {
         const Tag = p.href ? 'a' : 'div';
         return (
-          <li class:list={['reveal', p.status, { flagship: p.flagship }]}>
+          <li class:list={['reveal', p.status]}>
             <span class="node mono">{p.n}</span>
             <Tag class="item card" href={p.href}>
               <div class="top">
                 <span class="pill theme">{p.theme}</span>
-                {p.flagship && <span class="pill">Flagship</span>}
                 <span class:list={['pill', { live: p.status !== 'planned' }]}>{statusLabel[p.status]}</span>
               </div>
               <h3>{p.title}</h3>
               <p class="q">{p.question}</p>
-              <p class="meta">Scaling ladder · {p.ladder}</p>
+              {p.ladder && <p class="meta">Scaling ladder · {p.ladder}</p>}
             </Tag>
           </li>
         );
@@ -51,10 +49,23 @@ const shipped = lab.filter((p) => p.status === 'shipped').length;
         <a class="item card" href="/research#reverie">
           <div class="top"><span class="pill live">Capstone</span><span class="pill">Research</span></div>
           <h3>Reverie</h3>
-          <p class="q">Does the agent represent what it can't see, and does intervening on that representation change its plans?</p>
+          <p class="q">Does the model represent what it can't see, and does intervening on that representation change what it predicts?</p>
+          <p class="meta">The write-up of all five</p>
         </a>
       </li>
     </ol>
+  </section>
+
+  <section class="wrap after reveal">
+    <h2 class="sec-title">After the paper</h2>
+    <ul>
+      {afterLab.map((x) => (
+        <li>
+          <span class="t">{x.title}</span>
+          {x.note && <span class="d">{x.note}</span>}
+        </li>
+      ))}
+    </ul>
   </section>
 </Base>
 
@@ -81,10 +92,17 @@ const shipped = lab.filter((p) => p.status === 'shipped').length;
   .item { padding: 1.3rem 1.5rem; }
   li.planned .item { opacity: .78; box-shadow: none; }
   li.planned .item:hover { opacity: 1; }
-  li.flagship .item { border-style: dashed; }
   .top { display: flex; flex-wrap: wrap; gap: .4rem; }
   .theme { color: var(--ink-faint); }
   .item h3 { margin: .8rem 0 .35rem; font-size: 1.45rem; }
   .q { color: var(--ink-soft); margin-bottom: .6rem; }
   .item .meta { margin: 0; }
+
+  .sec-title { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); font-weight: 500; margin: 3rem 0 0; }
+  .ladder ol { margin-top: 1.5rem; }
+  .after { margin-top: 3.5rem; padding-top: .5rem; border-top: 1px solid var(--rule); }
+  .after ul { list-style: none; padding: 0; margin: 1.2rem 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: .1rem 2rem; }
+  .after li { display: grid; gap: .1rem; padding: .8rem 0; border-bottom: 1px solid var(--rule); }
+  .after .t { font-size: 1.15rem; color: var(--ink-soft); }
+  .after .d { font-size: .92rem; color: var(--ink-faint); }
 </style>

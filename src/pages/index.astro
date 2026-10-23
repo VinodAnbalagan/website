@@ -1,10 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import OcclusionHero from '../components/OcclusionHero.astro';
-import { site, links, lab, writing, fmtDate } from '../data/site';
+import { site, links, reverieLab, arxiv, writing, fmtDate } from '../data/site';
 
 const latest = [...writing].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3);
-const nextLab = lab.find((p) => p.status === 'next' || p.status === 'building') ?? lab[0];
+
 ---
 <Base>
   <section class="hero wrap">
@@ -32,17 +32,17 @@ const nextLab = lab.find((p) => p.status === 'next' || p.status === 'building') 
         <p>Does a world model represent what it cannot see? Probing and patching an RSSM while a ball is hidden behind an occluder.</p>
         <span class="meta">Research · world models</span>
       </a>
-      <a class="card reveal" href="/research#culturalriddles">
-        <span class="pill">MRL 2026</span>
+      <a class="card reveal" href={arxiv.url || '/research#culturalriddles'} target={arxiv.url ? '_blank' : undefined} rel="noopener">
+        <span class="pill">arXiv · MRL 2026 · TACL</span>
         <h3>CulturalRiddles</h3>
-        <p>First author on a living multicultural riddles benchmark: 51 languages, 62 communities, with the Cohere Labs Open Science Community.</p>
-        <span class="meta">Research · evaluation</span>
+        <p>Co-first author on a living multicultural riddles benchmark: 51 languages, 62 communities, with the Cohere Labs Open Science Community.</p>
+        <span class="meta">arXiv preprint (Oct 2026) · MRL 2026 · under review at TACL</span>
       </a>
       <a class="card reveal" href="/lab">
-        <span class="pill">Lab {nextLab.n} · up next</span>
-        <h3>{nextLab.title}</h3>
-        <p>{nextLab.question}</p>
-        <span class="meta">One of eight small, live, measured experiments</span>
+        <span class="pill live">In progress</span>
+        <h3>Lab · The World</h3>
+        <p>Building the simulator for Reverie, with hidden-collision labels.</p>
+        <span class="meta">Step 1 of {reverieLab.length} toward the Reverie paper</span>
       </a>
     </div>
   </section>

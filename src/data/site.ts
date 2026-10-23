@@ -20,44 +20,57 @@ export const links = {
   substack: 'https://vinodanbalagan.substack.com',
 };
 
+// arXiv preprint for CulturalRiddles. Fill both in once the listing is live; links appear automatically.
+export const riddles = {
+  blog: 'https://cohere.com/research/papers/culturalriddles-2026-10-22',
+  dashboard: 'https://huggingface.co/spaces/CohereLabsCommunity/CulturalRiddles',
+  dashboardEmbed: 'https://coherelabscommunity-culturalriddles.static.hf.space/index.html',
+  dataset: 'https://huggingface.co/datasets/CohereLabsCommunity/CulturalRiddles',
+  quiz: 'https://culturalriddles.ai/',
+};
+
+export const arxiv = {
+  id: '2610.29968',// e.g. '2610.12345'
+  url: 'https://arxiv.org/abs/2610.29968',// e.g. 'https://arxiv.org/abs/2610.12345'
+};
+
 export type Status = 'planned' | 'next' | 'building' | 'shipped';
 
 export interface LabProject {
   n: string;
   title: string;
   question: string;
-  ladder: string;
-  theme: 'Foundations' | 'Dynamics' | 'Representations' | 'Memory' | 'Planning' | 'Value' | 'Agent';
+  ladder?: string;
+  theme: string;
   status: Status;
-  flagship?: boolean;
-  href?: string; // set once the article exists, e.g. '/lab/01-model-based-vs-model-free'
+  href?: string; // set once the article exists, e.g. '/lab/01-the-world'
 }
 
-export const lab: LabProject[] = [
-  { n: '01', title: 'Model-Based vs Model-Free', theme: 'Foundations', status: 'next',
-    question: 'How much real experience does a learned model save, and what happens when the model is wrong?',
-    ladder: 'model error rate 0% → 10% → 30% → 50%' },
-  { n: '02', title: 'Compounding Error', theme: 'Dynamics', status: 'planned',
-    question: 'How fast does rollout error compound, and does a physics-informed inductive bias slow it down?',
-    ladder: 'rollout horizon 1 → 10 → 100' },
-  { n: '03', title: 'Latent Observatory', theme: 'Representations', status: 'planned',
-    question: 'Does an encoder trained on raw frames recover position and velocity? Linear probes against ground truth.',
-    ladder: 'number of balls 1 → 2 → 4 → 8' },
-  { n: '04', title: 'To Reconstruct or Not', theme: 'Representations', status: 'planned', flagship: true,
-    question: 'Reconstruction or latent prediction: which world model keeps the state that decisions actually need?',
-    ladder: 'background distractor complexity' },
-  { n: '05', title: 'Object Permanence', theme: 'Memory', status: 'planned',
-    question: 'How long does a recurrent latent keep an object it can no longer see?',
-    ladder: 'occlusion length, latent size' },
-  { n: '06', title: 'Planning in Imagination', theme: 'Planning', status: 'planned',
-    question: "Random shooting, CEM, MPPI and gradient-based planning: when does the planner exploit the model's errors?",
-    ladder: 'horizon, sample count' },
-  { n: '07', title: 'Value vs Horizon', theme: 'Value', status: 'planned',
-    question: 'How much long-horizon planning can a learned value function replace?',
-    ladder: 'horizon 1 → 3 → 5 → 10, with and without value' },
-  { n: '08', title: 'Mini TD-MPC', theme: 'Agent', status: 'planned',
-    question: 'All the pieces in one agent: how close does a from-scratch build get to TD-MPC2, and which component matters most?',
-    ladder: 'component ablations, own environment → DMControl' },
+// Section 1: the five steps that make up the Reverie paper, in order.
+export const reverieLab: LabProject[] = [
+  { n: '01', title: 'The World', theme: 'Environment', status: 'building',
+    question: 'A 2D bouncing-ball simulator with walls, ball-ball collisions, an occluder, and hidden-collision labels. Test set generated once and stored. Baselines: constant-velocity extrapolation and last-frame copy.',
+    ladder: 'occlusion length 3–5 → 6–10 → 11–15 frames, with and without a hidden collision' },
+  { n: '02', title: 'Latent Observatory', theme: 'Representations', status: 'next',
+    question: 'An RSSM trained on raw video with no physics in the loss: can probes read ball position and velocity from its state on visible frames? Scored as selectivity against a randomly initialised encoder.',
+    ladder: 'probe capacity linear → 2-layer → 4-layer; balls 1 → 2 → 3' },
+  { n: '03', title: 'Object Permanence', theme: 'Memory', status: 'planned',
+    question: 'The same probes through the occlusion window, reading the recurrent state h and the stochastic latent z separately.',
+    ladder: 'occlusion length; with vs without a hidden collision' },
+  { n: '04', title: 'Is It Used?', theme: 'Causality', status: 'planned',
+    question: 'Patch the recurrent state at occlusion onset with a counterfactual trajectory and roll forward. Does the ball reappear where the patched state says it should? Control: a random direction of equal norm.' },
+  { n: '05', title: 'Beyond the Simulator', theme: 'Generalisation', status: 'planned',
+    question: 'The decodability test on CLEVRER, where objects hide behind other objects.' },
+];
+
+// Section 2: experiments that come after the paper.
+export const afterLab: { title: string; note?: string }[] = [
+  { title: 'To Reconstruct or Not', note: 'Dreamer (reconstructs pixels) vs TD-MPC2 (decoder-free) on the same occlusion tests' },
+  { title: 'Model-Based vs Model-Free' },
+  { title: 'Compounding Error' },
+  { title: 'Planning in Imagination' },
+  { title: 'Value vs Horizon' },
+  { title: 'Mini TD-MPC' },
 ];
 
 export const labPrinciples = [
@@ -72,12 +85,14 @@ export interface Essay {
   dek: string;
   date: string;
   href: string;
-  group: 'Learning & world models' | 'Data & evaluation' | 'Perspectives';
+  group: 'Research blogs' | 'Learning & world models' | 'Data & evaluation' | 'Perspectives';
+  byline?: string;
 }
 
 const S = links.substack + '/p/';
 
 export const writing: Essay[] = [
+  { title: 'CulturalRiddles: Where Models Fall Short', dek: 'Original riddles from 62 cultures, and what 28 language models get wrong about them: regional gaps, made-up answers, and a pull toward the familiar.', date: '2026-10-22', href: 'https://cohere.com/research/papers/culturalriddles-2026-10-22', group: 'Research blogs', byline: 'Cohere Labs research blog · co-written with Tianyi Hu, Madeline Smith and Julia Kreutzer' },
   { title: 'The Architecture of Dreams, Part 3: Does Looking Right Mean Understanding?', dek: 'Genie, V-JEPA 2, and Physics-IQ.', date: '2026-10-11', href: S + 'the-architecture-of-dreams-part-3', group: 'Learning & world models' },
   { title: 'The Architecture of Dreams, Part 2: What Should a World Model Predict?', dek: 'MuZero, DreamerV3, TD-MPC2.', date: '2026-09-28', href: S + 'the-architecture-of-dreams-part-2', group: 'Learning & world models' },
   { title: 'Freezing the Noise', dek: 'How one line of algebra made sampling differentiable.', date: '2026-09-18', href: S + 'freezing-the-noise', group: 'Learning & world models' },

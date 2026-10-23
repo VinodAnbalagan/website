@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { site, links } from '../data/site';
+import { site, links, arxiv, riddles } from '../data/site';
 
 // Content mirrors Resume_Vinod_Anbalagan (Oct 2026). Phone number intentionally left off the web version.
 const HF = 'https://huggingface.co/';
@@ -15,19 +15,19 @@ const publications = [
   {
     title: 'A Multicultural Benchmark of Riddles',
     authors: 'V. Anbalagan et al.',
-    venue: 'To be presented at MRL 2026 (Workshop on Multilingual Representation Learning), Budapest · under review at TACL · arXiv preprint forthcoming',
-    links: [{ label: 'Research page', href: '/research#culturalriddles' }] as Link[],
+    venue: `${arxiv.id ? `arXiv:${arxiv.id}, 2026` : 'arXiv preprint, 2026'} · To be presented at MRL 2026 (Workshop on Multilingual Representation Learning), Budapest · under review at TACL`,
+    links: [...(arxiv.url ? [{ label: arxiv.id ? `arXiv:${arxiv.id}` : 'arXiv', href: arxiv.url }] : []), { label: 'Research blog (co-author)', href: riddles.blog }, { label: 'Dashboard', href: riddles.dashboard }, { label: 'Dataset', href: riddles.dataset }] as Link[],
   },
 ];
 
 const experience = [
   {
-    role: 'First Author & Cross-Team Lead',
+    role: 'Co-First Author & Cross-Team Lead',
     org: 'Cohere Labs Open Science Community · Remote',
     date: 'Apr 2026 to present',
     points: [
       'Lead the Multicultural Riddles Benchmark: ~6,100 natively written, human-evaluated riddles across 51 languages and 62 communities, designed to separate surface fluency from cultural understanding; coordinate 200+ contributors across writing, validation, and evaluation, including 165 riddle writers.',
-      'Owned data integrity across 30 evaluated models: found scoring-definition and coverage issues that were inflating reported results, added automated reconciliation checks, and ran an annotation audit that led to re-validating one community whose scores were unreliable.',
+      'Owned data integrity across 28 evaluated models: found scoring-definition and coverage issues that were inflating reported results, added automated reconciliation checks, and ran an annotation audit that led to re-validating one community whose scores were unreliable.',
       'Built the self-serve contribution pipeline: fork-based submissions validated on every pull request with GitHub Actions, tooling that turns validator output into contributor-ready feedback, and a one-command publisher that ships versioned Hugging Face releases with contributor credits and ISO language codes.',
       'Built a public results dashboard on Hugging Face Spaces with per-model, per-culture, difficulty, and error-type views, every figure reconciled to the human-evaluation source data.',
     ],
@@ -178,7 +178,7 @@ const contact = [
           for embodied agents.
         </p>
         <p class="dim">
-          First author and cross-team lead on a 51-language benchmark with the Cohere Labs Open Science
+          Co-first author and cross-team lead on a 51-language benchmark with the Cohere Labs Open Science
           Community; 2nd place in the Adaption Labs AutoScientist Challenge.
         </p>
       </section>

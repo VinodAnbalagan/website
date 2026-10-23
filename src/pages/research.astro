@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { links } from '../data/site';
+import { links, arxiv, riddles } from '../data/site';
 
 const knobs = [
   { k: 'Learning rule', d: 'Backprop versus local and biologically inspired alternatives.', now: false },
@@ -35,11 +35,11 @@ const knobs = [
   <article id="reverie" class="narrow paper reveal">
     <div class="tags">
       <span class="pill live">In progress</span>
-      <span class="pill">Pre-registered</span>
       <span class="pill">World models · interpretability</span>
     </div>
     <h2>Reverie</h2>
     <p class="subtitle">Does a world model represent what it cannot see?</p>
+    <p class="venue mono">Pre-registered (13 Sep 2026; addendum 23 Oct 2026 adds a reappearance test)</p>
 
     <h4 class="mono">Abstract</h4>
     <p>
@@ -56,6 +56,10 @@ const knobs = [
       hidden collisions: collisions behind the occluder that no extrapolation can predict, which separate
       learned dynamics from straight-line continuation. Results will be validated on CLEVRER.
     </p>
+    <p class="prior">
+      Closest prior work tests object permanence in object-state world models with a fixed 8-frame horizon;
+      Reverie tests it from pixels, with full counterfactual rollouts and reappearance inside the window.
+    </p>
     <p class="meta">RSSM · linear and MLP probes · activation patching · CLEVRER · JAX</p>
     <p class="note">The animation on the <a href="/">home page</a> illustrates the hidden-collision control. It is a sketch of the question, not model output.</p>
   </article>
@@ -63,13 +67,16 @@ const knobs = [
   <article id="culturalriddles" class="narrow paper reveal">
     <div class="tags">
       <span class="pill live">MRL 2026</span>
-      <span class="pill">First author</span>
+      <span class="pill">Co-first author</span>
       <span class="pill">Multilingual evaluation</span>
     </div>
     <h2>CulturalRiddles</h2>
     <p class="subtitle">A multicultural benchmark of riddles across 51 languages.</p>
 
-    <p class="venue mono">To be presented at MRL 2026, Budapest · submitting to TACL · arXiv preprint coming soon</p>
+    <p class="venue mono">
+      {arxiv.url ? <a href={arxiv.url} target="_blank" rel="noopener">arXiv{arxiv.id ? `:${arxiv.id}` : ' preprint'} ↗</a> : 'arXiv preprint (Oct 2026)'}
+      · To be presented at MRL 2026, Budapest · under review at TACL
+    </p>
 
     <p>
       Riddles are a setting where surface fluency and real understanding come apart sharply. A model
@@ -78,19 +85,50 @@ const knobs = [
       evaluates how well language models solve them in the cultural context they come from.
     </p>
     <ul class="role">
-      <li>First author and cross-team lead, with the Cohere Labs Open Science Community</li>
+      <li>Co-first author and cross-team lead, with the Cohere Labs Open Science Community</li>
       <li>Led data creation, validation, evaluation and analysis</li>
       <li>Coordinated 200+ contributors across writing, validation and evaluation, including 165 riddle writers</li>
       <li>A living dataset: new communities keep joining</li>
       <li>Designed the canonical schema, the benchmarking pipeline and the dataset release</li>
     </ul>
-    <p class="meta">Paper, dataset and code will be linked here on publication.</p>
+
+    <p class="links">
+      <a class="chip" href={arxiv.url} target="_blank" rel="noopener">Paper ↗</a>
+      <a class="chip" href={riddles.blog} target="_blank" rel="noopener">Research blog ↗</a>
+      <a class="chip" href={riddles.dashboard} target="_blank" rel="noopener">Dashboard ↗</a>
+      <a class="chip" href={riddles.dataset} target="_blank" rel="noopener">Dataset ↗</a>
+      <a class="chip" href={riddles.quiz} target="_blank" rel="noopener">Take the quiz ↗</a>
+    </p>
+
+    <div class="piece">
+      <p class="eyebrow">I built · results dashboard</p>
+      <h3>The CulturalRiddles dashboard</h3>
+      <p>
+        A public dashboard on Hugging Face Spaces for exploring the benchmark by model, culture, region,
+        difficulty and error type. Every figure is reconciled to the human-evaluation source data.
+      </p>
+      <div class="embed">
+        <iframe src={riddles.dashboardEmbed} title="CulturalRiddles results dashboard" loading="lazy"></iframe>
+      </div>
+      <a class="btn" href={riddles.dashboard} target="_blank" rel="noopener">Open the dashboard <span class="arrow">↗</span></a>
+    </div>
+
+    <div class="piece">
+      <p class="eyebrow">I co-wrote · Cohere Labs research blog</p>
+      <h3><a href={riddles.blog} target="_blank" rel="noopener">Where models fall short</a></h3>
+      <p>
+        The public write-up of the paper: why a 79% overall score hides communities where no model
+        passes 22%, why translation only closes part of the gap, and why models reach for the familiar
+        answer. Co-written with Tianyi Hu, Madeline Smith and Julia Kreutzer.
+      </p>
+      <a class="btn" href={riddles.blog} target="_blank" rel="noopener">Read the blog <span class="arrow">↗</span></a>
+    </div>
   </article>
 
   <section class="narrow reveal next">
     <p>
-      The <a href="/lab">Lab</a> is where the smaller experiments live: eight measured, interactive
-      studies that build the toolkit Reverie depends on. Follow along on <a href={links.substack} target="_blank" rel="noopener">The Meta Gradient</a>.
+      The <a href="/lab">Lab</a> is where Reverie gets built, one step at a time: five experiments
+      toward the paper, and more after it. Follow along on <a href={links.substack} target="_blank" rel="noopener">The Meta Gradient</a>.
     </p>
   </section>
 </Base>
@@ -116,6 +154,17 @@ const knobs = [
   .role { padding-left: 1.1rem; color: var(--ink-soft); }
   .role li { margin-bottom: .3rem; }
   .role li::marker { color: var(--accent); }
+  .prior { color: var(--ink-soft); font-size: 1.02rem; border-left: 2px solid var(--rule); padding-left: .9rem; }
+  .venue a { color: inherit; }
+  .links { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.4rem 0 0; }
+  .chip { font-family: 'Inter', system-ui, sans-serif; font-size: .8rem; text-decoration: none; padding: .3em .8em; border: 1px solid var(--rule); border-radius: 999px; color: var(--ink-soft); }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .piece { margin-top: 2.6rem; padding-top: 1.8rem; border-top: 1px dashed var(--rule); }
+  .piece h3 { font-size: 1.5rem; margin: 0 0 .6rem; }
+  .piece h3 a { text-decoration: none; }
+  .piece p { color: var(--ink-soft); }
+  .embed { border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; margin: 1rem 0 1.1rem; background: var(--bg-raised); }
+  .embed iframe { display: block; width: 100%; height: 560px; border: 0; }
   .note { font-size: .95rem; color: var(--ink-soft); font-style: italic; }
   .next { border-top: 1px solid var(--rule); margin-top: 3rem; padding-top: 2rem; color: var(--ink-soft); }
 </style>
