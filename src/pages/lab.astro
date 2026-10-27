@@ -5,12 +5,12 @@ import { paperLab, afterLab, labPrinciples, project } from '../data/site';
 const statusLabel = { planned: 'Planned', next: 'Up next', building: 'In progress', shipped: 'Live' } as const;
 const shipped = paperLab.filter((p) => p.status === 'shipped').length;
 ---
-<Base title="Lab" description="Building a world-model planner, one component at a time, toward one question: can a robot remember only what surprises it, and stay fast?">
+<Base title="Lab" description="Building a world-model planner, one component at a time, toward one question: what should a robot remember, and is its own surprise a good guide?">
   <header class="page-head wrap">
     <p class="eyebrow">The Lab · {shipped} of {paperLab.length} toward the {project.name} paper</p>
     <h1>Teaching a world model<br />what to remember.</h1>
     <p class="lede">
-      Toward one question: can a world-model planner remember only what surprises it, and keep both its reliability and its speed?
+      Toward one question: what should a robot remember? And is its world model's own surprise a good guide, without giving up reliability or speed?
     </p>
   </header>
 
@@ -49,7 +49,7 @@ const shipped = paperLab.filter((p) => p.status === 'shipped').length;
         <a class="item card" href={project.anchor}>
           <div class="top"><span class="pill live">Capstone</span><span class="pill">Research</span></div>
           <h3>{project.name}</h3>
-          <p class="q">{project.question} A planner that writes to a small, fixed memory only when its own prediction fails, measured on both success and speed.</p>
+          <p class="q">{project.question} Testing whether a world model's own surprise is a good guide to what goes into a small, fixed memory, measured on both success and speed.</p>
           <p class="meta">The write-up of all {paperLab.length}</p>
         </a>
       </li>

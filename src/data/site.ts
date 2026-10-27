@@ -39,8 +39,8 @@ export type Status = 'planned' | 'next' | 'building' | 'shipped';
 // The current research project. Rename it here and the Lab, home and research pages follow.
 export const project = {
   name: 'Keepsake',
-  question: 'Can a robot remember only what surprises it?',
-  paperTitle: 'Remember What Surprises You: Lean Memory for Real-Time World-Model Planning',
+  question: 'What should a robot remember?',
+  paperTitle: 'What Should a Robot Remember? Surprise as a Guide to Lean Memory in Real-Time World-Model Planning',
   anchor: '/research#keepsake',
 };
 

@@ -29,7 +29,7 @@ const latest = [...writing].sort((a, b) => b.date.localeCompare(a.date)).slice(0
       <a class="card reveal" href={project.anchor}>
         <span class="pill live">In progress</span>
         <h3>{project.name}</h3>
-        <p>{project.question} A world-model planner that writes to a small, fixed memory only when its own prediction fails, measured on success and speed.</p>
+        <p>{project.question} Testing whether a world model's own surprise is a good guide to what goes into a small, fixed memory, measured on success and speed.</p>
         <span class="meta">Research · world models · robot learning</span>
       </a>
       <a class="card reveal" href={arxiv.url || '/research#culturalriddles'} target={arxiv.url ? '_blank' : undefined} rel="noopener">
