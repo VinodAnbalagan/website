@@ -53,9 +53,12 @@ const knobs = [
     <p>
       {project.name} tests a lean alternative inside a latent world-model planner. The planner runs
       without memory by default. When its own one-step prediction turns out wrong, it writes that moment
-      into a small, fixed-size memory, and plans with it. On tasks built so that the current frame is not
-      enough, it is compared against no memory, frame stacking, full history and an oracle given the true
-      task state. Two things are measured together: task success and planning time per decision.
+      into a small, fixed-size memory, and plans with it. Surprise is treated as a hypothesis, not a
+      definition of importance: it may miss progress the robot caused itself, and fire on changes that
+      do not matter. On tasks built so that the current frame is not enough, it is compared against no
+      memory, frame stacking, a recurrent state, full history and an oracle given the true task state.
+      Two claims are tested separately: whether a compact memory is worth its cost, and whether surprise
+      is a good way to choose what goes into it.
     </p>
     <p class="prior">
       Closest prior work gates episodic memory on surprise to help a language-model agent answer questions
