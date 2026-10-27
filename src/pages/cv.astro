@@ -9,7 +9,7 @@ const SUB = links.substack + '/p/';
 type Link = { label: string; href: string };
 const ext = (h: string) => (h.startsWith('http') ? '_blank' : undefined);
 
-const interests = ['World models for embodied agents', 'Model-based RL and robot learning', 'Representation learning and probing'];
+const interests = ['World models for embodied agents', 'Model-based RL and robot learning', 'Memory for real-time planning', 'Representation learning and probing'];
 
 const publications = [
   {
@@ -33,12 +33,12 @@ const experience = [
     ],
   },
   {
-    role: 'Independent Researcher, World Models & Representation Learning',
+    role: 'Independent Researcher, World Models & Embodied AI',
     org: 'The Meta Gradient · Toronto',
     date: 'Oct 2025 to present',
     points: [
-      'Reverie (pre-registered, in progress): testing whether recurrent state-space world models trained on video keep a decodable, causally used representation of objects they cannot see, using linear and MLP probes, activation patching, and hidden collisions as a control. Built in JAX.',
-      'Building a bouncing-ball physics environment with ground-truth state for controlled experiments on what learned dynamics models encode; extending to embodied settings with imitation learning and VLAs in MuJoCo and LeRobot.',
+      'Keepsake (in progress): testing whether a latent world-model planner can stay reliable on long tasks by remembering only what surprises it, writing to a small fixed memory when its own prediction fails, and measuring task success against planning time per decision. Simulation first, then a low-cost robot arm.',
+      'Building memory-dependent variants of standard world-model planning tasks, with ground-truth task state for controlled comparisons; studying imitation learning and VLAs in MuJoCo and LeRobot alongside.',
       'Publish The Meta Gradient, technical essays with derivations, code, and interactive demos; a VAE explainer post reached 34,000+ LinkedIn impressions.',
     ],
   },

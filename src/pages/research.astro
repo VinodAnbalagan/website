@@ -1,25 +1,27 @@
 ---
 import Base from '../layouts/Base.astro';
-import { links, arxiv, riddles } from '../data/site';
+import { links, arxiv, riddles, project, paperLab } from '../data/site';
 
 const knobs = [
   { k: 'Learning rule', d: 'Backprop versus local and biologically inspired alternatives.', now: false },
   { k: 'Architecture', d: 'Symmetry and equivariance built into the network.', now: false },
-  { k: 'Objective', d: 'Predictive world models: physical state or surface statistics?', now: true },
+  { k: 'Objective', d: 'Predictive world models: physical state or surface statistics?', now: false },
+  { k: 'Memory', d: 'What must a world model keep to act well, and what does keeping it cost?', now: true },
 ];
 ---
-<Base title="Research" description="Reverie, a world-model interpretability study, and CulturalRiddles, a multicultural riddles benchmark.">
+<Base title="Research" description="Keepsake, a study of lean memory for real-time world-model planning, and CulturalRiddles, a multicultural riddles benchmark.">
   <header class="page-head narrow">
     <p class="eyebrow">Research</p>
     <h1>When a model succeeds, has it learned the structure, or the surface cues?</h1>
     <p class="lede">
-      One question runs through the work: what changes in a model's internal representations when
-      you constrain how it learns. I answer it with probes and causal interventions rather than benchmark scores.
+      One question runs through the work: what a model actually learns, and what it needs to keep,
+      when you constrain how it learns. I answer it with controlled environments, matched baselines,
+      probes and causal tests rather than leaderboard scores.
     </p>
   </header>
 
   <section class="narrow program reveal">
-    <p class="eyebrow">The programme · one question, three knobs, one toolkit</p>
+    <p class="eyebrow">The programme · one question, four knobs, one toolkit</p>
     <div class="knobs">
       {knobs.map((x) => (
         <div class:list={['knob', { now: x.now }]}>
@@ -29,39 +31,40 @@ const knobs = [
         </div>
       ))}
     </div>
-    <p class="meta tools">Instruments held constant: linear and nonlinear probing · activation patching · dynamical-systems analysis · matched baselines and registered negative results</p>
+    <p class="meta tools">Instruments held constant: environments with ground-truth state · matched baselines and ablations · linear and nonlinear probing · activation patching · hypotheses stated before results, negative results reported</p>
   </section>
 
-  <article id="reverie" class="narrow paper reveal">
+  <article id="keepsake" class="narrow paper reveal">
     <div class="tags">
       <span class="pill live">In progress</span>
-      <span class="pill">World models · interpretability</span>
+      <span class="pill">World models · robot learning</span>
     </div>
-    <h2>Reverie</h2>
-    <p class="subtitle">Does a world model represent what it cannot see?</p>
-    <p class="venue mono">Pre-registered (13 Sep 2026; addendum 23 Oct 2026 adds a reappearance test)</p>
+    <h2>{project.name}</h2>
+    <p class="subtitle">{project.question}</p>
+    <p class="venue mono">Working title: {project.paperTitle} · preprint planned for December 2026</p>
 
     <h4 class="mono">Abstract</h4>
     <p>
-      World models trained on video are often said to learn physics. Reverie tests one narrow version
-      of that claim. A recurrent state-space model (RSSM) is trained on simulated video of balls bouncing
-      and colliding in a box, with no physics in the loss. When a ball passes behind an occluder, we ask
-      two questions: is its position still decodable from the model's internal state, and is that
-      representation causally used to predict where the ball reappears?
+      Most robot foundation models have no memory: they act on the current camera frame alone. That
+      works until the frame stops telling you how far along you are: identical objects, a cue that has
+      disappeared, something hidden from view. Giving a model memory the obvious way is expensive. Ten
+      seconds of video from four cameras at 50 Hz is about half a million tokens.
     </p>
     <p>
-      Decodability is measured with probes of increasing capacity, reported as selectivity against a
-      randomly initialised encoder. Causal use is tested by patching the recurrent state with a
-      counterfactual trajectory, against a matched-norm random-direction control. The central control is
-      hidden collisions: collisions behind the occluder that no extrapolation can predict, which separate
-      learned dynamics from straight-line continuation. Results will be validated on CLEVRER.
+      {project.name} tests a lean alternative inside a latent world-model planner. The planner runs
+      without memory by default. When its own one-step prediction turns out wrong, it writes that moment
+      into a small, fixed-size memory, and plans with it. On tasks built so that the current frame is not
+      enough, it is compared against no memory, frame stacking, full history and an oracle given the true
+      task state. Two things are measured together: task success and planning time per decision.
     </p>
     <p class="prior">
-      Closest prior work tests object permanence in object-state world models with a fixed 8-frame horizon;
-      Reverie tests it from pixels, with full counterfactual rollouts and reappearance inside the window.
+      Closest prior work gates episodic memory on surprise to help a language-model agent answer questions
+      about what a robot saw, and does not report timing. {project.name} uses the planner's own
+      action-conditioned prediction error, puts the memory inside the control loop, and treats speed as a
+      primary result.
     </p>
-    <p class="meta">RSSM · linear and MLP probes · activation patching · CLEVRER · JAX</p>
-    <p class="note">The animation on the <a href="/">home page</a> illustrates the hidden-collision control. It is a sketch of the question, not model output.</p>
+    <p class="meta">JEPA world model · latent planning · event memory · simulation first, then a real arm</p>
+    <p class="note">The animation on the <a href="/">home page</a> sketches the idea. It is an illustration, not model output.</p>
   </article>
 
   <article id="culturalriddles" class="narrow paper reveal">
@@ -127,7 +130,7 @@ const knobs = [
 
   <section class="narrow reveal next">
     <p>
-      The <a href="/lab">Lab</a> is where Reverie gets built, one step at a time: five experiments
+      The <a href="/lab">Lab</a> is where {project.name} gets built, one step at a time: {paperLab.length} experiments
       toward the paper, and more after it. Follow along on <a href={links.substack} target="_blank" rel="noopener">The Meta Gradient</a>.
     </p>
   </section>
@@ -135,7 +138,7 @@ const knobs = [
 
 <style>
   .program { margin-bottom: 1rem; }
-  .knobs { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
+  .knobs { display: grid; grid-template-columns: repeat(2, 1fr); gap: .8rem; }
   .knob { border: 1px solid var(--rule); border-radius: 14px; padding: 1.1rem 1.1rem 1rem; background: var(--bg-raised); }
   .knob.now { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
   .knob h3 { font-size: 1.15rem; margin: .4rem 0 .35rem; }

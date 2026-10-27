@@ -3,14 +3,14 @@
 export const site = {
   name: 'Vinod Anbalagan',
   role: 'ML engineer · independent researcher · Toronto',
-  headline: 'ML Engineer & Independent Researcher · Representation Learning, Multimodal AI & World Models',
+  headline: 'ML Engineer & Independent Researcher · World Models, Robot Learning & Representation Learning',
   identity:
-    'I study what representations a learner forms when you constrain it, using probes and causal interventions rather than benchmark scores.',
+    'I study what models actually learn, and what they need to remember. Right now: world models that plan for robots, and the leanest memory that keeps them reliable.',
   description:
-    'Vinod Anbalagan: ML engineer and independent researcher working on world models, representation learning and evaluation.',
+    'Vinod Anbalagan: ML engineer and independent researcher working on world models, robot learning, representation learning and evaluation.',
   email: 'vinodanbalagan@gmail.com',
   openTo:
-    'Open to research engineer, research assistant, and research internship opportunities, as well as funded MS/PhD positions, in world models, representation learning, multimodal AI, robotics, and scientific ML.',
+    'Open to research engineer, research assistant, and research internship opportunities, as well as funded MS/PhD positions, in world models, embodied AI and robot learning, representation learning, multimodal AI, and scientific ML.',
 };
 
 export const links = {
@@ -36,6 +36,14 @@ export const arxiv = {
 
 export type Status = 'planned' | 'next' | 'building' | 'shipped';
 
+// The current research project. Rename it here and the Lab, home and research pages follow.
+export const project = {
+  name: 'Keepsake',
+  question: 'Can a robot remember only what surprises it?',
+  paperTitle: 'Remember What Surprises You: Lean Memory for Real-Time World-Model Planning',
+  anchor: '/research#keepsake',
+};
+
 export interface LabProject {
   n: string;
   title: string;
@@ -43,34 +51,38 @@ export interface LabProject {
   ladder?: string;
   theme: string;
   status: Status;
-  href?: string; // set once the article exists, e.g. '/lab/01-the-world'
+  href?: string; // set once the article exists, e.g. '/lab/01-the-baseline'
 }
 
-// Section 1: the five steps that make up the Reverie paper, in order.
-export const reverieLab: LabProject[] = [
-  { n: '01', title: 'The World', theme: 'Environment', status: 'building',
-    question: 'A 2D bouncing-ball simulator with walls, ball-ball collisions, an occluder, and hidden-collision labels. Test set generated once and stored. Baselines: constant-velocity extrapolation and last-frame copy.',
-    ladder: 'occlusion length 3–5 → 6–10 → 11–15 frames, with and without a hidden collision' },
-  { n: '02', title: 'Latent Observatory', theme: 'Representations', status: 'next',
-    question: 'An RSSM trained on raw video with no physics in the loss: can probes read ball position and velocity from its state on visible frames? Scored as selectivity against a randomly initialised encoder.',
-    ladder: 'probe capacity linear → 2-layer → 4-layer; balls 1 → 2 → 3' },
-  { n: '03', title: 'Object Permanence', theme: 'Memory', status: 'planned',
-    question: 'The same probes through the occlusion window, reading the recurrent state h and the stochastic latent z separately.',
-    ladder: 'occlusion length; with vs without a hidden collision' },
-  { n: '04', title: 'Is It Used?', theme: 'Causality', status: 'planned',
-    question: 'Patch the recurrent state at occlusion onset with a counterfactual trajectory and roll forward. Does the ball reappear where the patched state says it should? Control: a random direction of equal norm.' },
-  { n: '05', title: 'Beyond the Simulator', theme: 'Generalisation', status: 'planned',
-    question: 'The decodability test on CLEVRER, where objects hide behind other objects.' },
+// Section 1: the six steps that make up the Keepsake paper, in order.
+export const paperLab: LabProject[] = [
+  { n: '01', title: 'The Baseline', theme: 'Foundations', status: 'building',
+    question: 'Reproduce LeWorldModel, a small JEPA world model that plans from pixels, on one of its tasks. Measure success rate and planning time per decision on my own hardware, so every later number has a reference point.',
+    ladder: 'planning horizon 5 → 10 → 20 steps' },
+  { n: '02', title: 'Tasks That Need Memory', theme: 'Environment', status: 'next',
+    question: 'Variants of standard planning tasks where the current frame cannot tell you what to do next: a goal cue that disappears, and identical objects that must each be handled once. First test: does the memoryless planner fail, as it should?',
+    ladder: 'cue-to-decision delay short → medium → long; identical objects 2 → 4 → 8' },
+  { n: '03', title: 'Remembering Everything', theme: 'Memory', status: 'planned',
+    question: 'The expensive answers: stack recent frames, or keep every past state and attend over all of it, plus an oracle handed the true task state. These set the ceiling and the price.',
+    ladder: 'history length 4 → 16 → full episode' },
+  { n: '04', title: 'The Surprise Gate', theme: 'Surprise', status: 'planned',
+    question: "Write to a small, fixed memory only when the world model's own prediction fails. Does that beat writing at fixed intervals or at random, with the same number of slots?",
+    ladder: 'memory slots 4 → 8 → 16' },
+  { n: '05', title: 'The Price of Memory', theme: 'Speed', status: 'planned',
+    question: 'Success rate against planning time per decision, for every memory variant. Does surprise-gated memory buy most of the reliability of full history at close to memoryless speed?',
+    ladder: 'memory none → surprise-gated → full history' },
+  { n: '06', title: 'When the World Changes', theme: 'Robustness', status: 'planned',
+    question: 'Move an object mid-task, or hide it behind an occluder. Does surprise catch the change and update memory, or does the planner act on a stale memory?',
+    ladder: 'perturbation early → middle → late in the episode' },
 ];
 
 // Section 2: experiments that come after the paper.
 export const afterLab: { title: string; note?: string }[] = [
-  { title: 'To Reconstruct or Not', note: 'Dreamer (reconstructs pixels) vs TD-MPC2 (decoder-free) on the same occlusion tests' },
-  { title: 'Model-Based vs Model-Free' },
-  { title: 'Compounding Error' },
-  { title: 'Planning in Imagination' },
-  { title: 'Value vs Horizon' },
-  { title: 'Mini TD-MPC' },
+  { title: 'On a Real Arm', note: 'The same planner and memory on a low-cost arm with a camera' },
+  { title: 'Another Body', note: 'The same memory, unchanged, on a simulated drone' },
+  { title: 'Lessons Across Episodes', note: 'Distilled experience in a compact graph, recalled only when surprised' },
+  { title: 'Memory in the World', note: 'Can an agent learn to leave itself traces in the scene?' },
+  { title: 'Many Bodies', note: 'A leader steering followers through a learned world model' },
 ];
 
 export const labPrinciples = [

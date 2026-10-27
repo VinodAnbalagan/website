@@ -1,0 +1,277 @@
+---
+// Live illustration of the Keepsake question.
+// An agent works through identical boxes. Its routine is predictable, so surprise stays low and nothing
+// is stored. Now and then a box is moved by something outside the agent's control: the world model's
+// prediction fails, surprise crosses the threshold, and that moment is written to a small fixed memory.
+// This is an illustration of the idea, not model output.
+---
+<figure class="keepsake">
+  <div class="frame">
+    <canvas id="keepsake-canvas" aria-label="Animated sketch: an agent visits identical boxes. A surprise trace runs along the bottom. When a box is moved unexpectedly, surprise spikes above a threshold and the moment is written into one of four memory slots."></canvas>
+    <button class="pause no-print" type="button" aria-label="Pause animation">❚❚</button>
+  </div>
+  <figcaption>
+    <span class="key"><i class="k-agent"></i> agent</span>
+    <span class="key"><i class="k-box"></i> identical boxes</span>
+    <span class="key"><i class="k-ghost"></i> where the model expected it</span>
+    <span class="key"><i class="k-warn"></i> surprise, written to memory</span>
+    <p>
+      Most moments are predictable, so nothing is stored. When the world does something the model did
+      not predict, that moment is written to a small, fixed memory. Keepsake asks whether that is enough
+      to act reliably, and how much speed it saves.
+    </p>
+  </figcaption>
+</figure>
+
+<script>
+  type Box = { x: number; y: number; flash: number };
+  type Ghost = { x: number; y: number; life: number };
+  type Slot = { label: string; t: number; flash: number };
+
+  const canvas = document.getElementById('keepsake-canvas') as HTMLCanvasElement | null;
+  if (canvas) {
+    const ctx = canvas.getContext('2d')!;
+    const W = 2, H = 1;
+    const SCENE = { x0: 0.05, y0: 0.07, x1: 1.4, y1: 0.68 };
+    const PLOT = { x0: 0.05, y0: 0.76, x1: 1.4, y1: 0.95 };
+    const MEM = { x0: 1.5, y0: 0.07, x1: 1.95 };
+    const S = 0.075, AR = 0.03, SPEED = 0.38, K = 4, TH = 0.55, N = 220, DT_SAMPLE = 0.05;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let paused = reduce;
+    let scale = 1;
+
+    const rand = (a: number, b: number) => a + Math.random() * (b - a);
+    const free = (x: number, y: number, skip = -1) =>
+      boxes.every((b, i) => i === skip || Math.hypot(b.x - x, b.y - y) > 2.2 * S);
+    function spot(skip = -1) {
+      for (let k = 0; k < 200; k++) {
+        const x = rand(SCENE.x0 + S, SCENE.x1 - S), y = rand(SCENE.y0 + S, SCENE.y1 - S);
+        if (free(x, y, skip)) return { x, y };
+      }
+      return { x: rand(SCENE.x0 + S, SCENE.x1 - S), y: rand(SCENE.y0 + S, SCENE.y1 - S) };
+    }
+
+    const boxes: Box[] = [];
+    for (let i = 0; i < 5; i++) { const p = spot(); boxes.push({ x: p.x, y: p.y, flash: 0 }); }
+    const agent = { x: 0.2, y: 0.4, target: 0, pulse: 0 };
+    const ghosts: Ghost[] = [];
+    const slots: Slot[] = [];
+    const hist: number[] = [];
+    let clock = 0, sampleClock = 0, nextJolt = rand(2.5, 4), joltAge = 99, joltAmp = 0, touchAge = 99;
+    let above = false, frames = 0, writes = 0, lastJolted = -1;
+
+    function resize() {
+      const w = canvas!.parentElement!.clientWidth;
+      const h = w / 2;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas!.width = Math.round(w * dpr);
+      canvas!.height = Math.round(h * dpr);
+      canvas!.style.width = w + 'px';
+      canvas!.style.height = h + 'px';
+      scale = (w * dpr) / W;
+      ctx.setTransform(scale, 0, 0, scale, 0, 0);
+    }
+
+    function surprise() {
+      const base = 0.11 + 0.035 * Math.sin(clock * 1.7) + rand(-0.03, 0.03);
+      const touch = 0.17 * Math.exp(-touchAge * 6);
+      const jolt = joltAmp * Math.exp(-joltAge * 3.2);
+      return Math.max(0, base + touch + jolt);
+    }
+
+    function jolt() {
+      let i = Math.floor(Math.random() * boxes.length);
+      if (i === lastJolted) i = (i + 1) % boxes.length;
+      lastJolted = i;
+      const b = boxes[i];
+      ghosts.push({ x: b.x, y: b.y, life: 1 });
+      const p = spot(i);
+      b.x = p.x; b.y = p.y; b.flash = 1;
+      joltAge = 0; joltAmp = rand(0.8, 1.0);
+      nextJolt = rand(3.2, 5.6);
+    }
+
+    function step(dt: number) {
+      clock += dt;
+      joltAge += dt; touchAge += dt;
+      nextJolt -= dt;
+      if (nextJolt <= 0) jolt();
+
+      const t = boxes[agent.target];
+      const dx = t.x - agent.x, dy = t.y - agent.y, d = Math.hypot(dx, dy);
+      const stop = S * 0.75 + AR;
+      if (d > stop) {
+        const v = Math.min(SPEED * dt, d - stop);
+        agent.x += (dx / d) * v; agent.y += (dy / d) * v;
+      } else {
+        agent.pulse = 1; touchAge = 0;
+        agent.target = (agent.target + 1) % boxes.length;
+      }
+      agent.pulse = Math.max(0, agent.pulse - dt * 1.6);
+      for (const b of boxes) b.flash = Math.max(0, b.flash - dt * 0.6);
+      for (const g of ghosts) g.life -= dt / 2.6;
+      while (ghosts.length && ghosts[0].life <= 0) ghosts.shift();
+      for (const s of slots) s.flash = Math.max(0, s.flash - dt * 0.8);
+
+      sampleClock += dt;
+      while (sampleClock >= DT_SAMPLE) {
+        sampleClock -= DT_SAMPLE;
+        const s = surprise();
+        hist.push(s); frames++;
+        if (hist.length > N) hist.shift();
+        if (s > TH && !above) {
+          above = true; writes++;
+          slots.push({ label: `box ${lastJolted + 1} moved`, t: clock, flash: 1 });
+          if (slots.length > K) slots.shift();
+        } else if (s < TH * 0.8) {
+          above = false;
+        }
+      }
+    }
+
+    const css = (v: string) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+    function draw() {
+      const ink = css('--ink'), faint = css('--ink-faint'), rule = css('--rule'), accent = css('--accent'), warn = css('--warn');
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = css('--canvas-bg');
+      ctx.fillRect(0, 0, W, H);
+
+      // panels
+      ctx.strokeStyle = rule; ctx.lineWidth = 1 / scale;
+      ctx.beginPath(); ctx.moveTo(SCENE.x0, (SCENE.y1 + PLOT.y0) / 2); ctx.lineTo(SCENE.x1, (SCENE.y1 + PLOT.y0) / 2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo((SCENE.x1 + MEM.x0) / 2, 0.04); ctx.lineTo((SCENE.x1 + MEM.x0) / 2, 0.96); ctx.stroke();
+
+      // ghosts: where the model expected a moved box to be
+      for (const g of ghosts) {
+        ctx.globalAlpha = Math.max(0, g.life);
+        ctx.strokeStyle = warn; ctx.lineWidth = 1.6 / scale;
+        ctx.setLineDash([4 / scale, 3 / scale]);
+        ctx.strokeRect(g.x - S / 2, g.y - S / 2, S, S);
+        ctx.setLineDash([]);
+      }
+      ctx.globalAlpha = 1;
+
+      // boxes
+      for (const b of boxes) {
+        ctx.fillStyle = ink;
+        ctx.fillRect(b.x - S / 2, b.y - S / 2, S, S);
+        if (b.flash > 0) {
+          ctx.strokeStyle = warn; ctx.globalAlpha = b.flash; ctx.lineWidth = 2 / scale;
+          ctx.strokeRect(b.x - S / 2 - 0.012, b.y - S / 2 - 0.012, S + 0.024, S + 0.024);
+          ctx.globalAlpha = 1;
+        }
+      }
+
+      // agent
+      if (agent.pulse > 0) {
+        ctx.strokeStyle = accent; ctx.globalAlpha = agent.pulse * 0.5; ctx.lineWidth = 1 / scale;
+        ctx.beginPath(); ctx.arc(agent.x, agent.y, AR + (1 - agent.pulse) * 0.05, 0, Math.PI * 2); ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+      ctx.fillStyle = accent;
+      ctx.beginPath(); ctx.arc(agent.x, agent.y, AR, 0, Math.PI * 2); ctx.fill();
+
+      // surprise trace
+      const ph = PLOT.y1 - PLOT.y0, pw = PLOT.x1 - PLOT.x0;
+      const yOf = (s: number) => PLOT.y1 - Math.min(s, 1.1) / 1.1 * ph;
+      ctx.strokeStyle = faint; ctx.lineWidth = 1 / scale;
+      ctx.setLineDash([3 / scale, 3 / scale]);
+      ctx.beginPath(); ctx.moveTo(PLOT.x0, yOf(TH)); ctx.lineTo(PLOT.x1, yOf(TH)); ctx.stroke();
+      ctx.setLineDash([]);
+      for (let i = 1; i < hist.length; i++) {
+        const x0 = PLOT.x0 + ((i - 1) / (N - 1)) * pw, x1 = PLOT.x0 + (i / (N - 1)) * pw;
+        const hot = hist[i] > TH || hist[i - 1] > TH;
+        ctx.strokeStyle = hot ? warn : ink;
+        ctx.globalAlpha = hot ? 1 : 0.55;
+        ctx.lineWidth = (hot ? 2 : 1.2) / scale;
+        ctx.beginPath(); ctx.moveTo(x0, yOf(hist[i - 1])); ctx.lineTo(x1, yOf(hist[i])); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+
+      // memory slots
+      const slotH = 0.145, gap = 0.028, top = MEM.y0 + 0.09;
+      for (let k = 0; k < K; k++) {
+        const y = top + k * (slotH + gap);
+        const s = slots[k];
+        if (s) {
+          if (s.flash > 0) { ctx.fillStyle = warn; ctx.globalAlpha = s.flash * 0.22; ctx.fillRect(MEM.x0, y, MEM.x1 - MEM.x0, slotH); ctx.globalAlpha = 1; }
+          ctx.strokeStyle = s.flash > 0.05 ? warn : faint; ctx.lineWidth = 1.2 / scale;
+          ctx.strokeRect(MEM.x0, y, MEM.x1 - MEM.x0, slotH);
+          const ic = 0.05;
+          ctx.fillStyle = ink;
+          ctx.fillRect(MEM.x0 + 0.03, y + slotH / 2 - ic / 2, ic, ic);
+        } else {
+          ctx.strokeStyle = rule; ctx.lineWidth = 1 / scale;
+          ctx.setLineDash([4 / scale, 3 / scale]);
+          ctx.strokeRect(MEM.x0, y, MEM.x1 - MEM.x0, slotH);
+          ctx.setLineDash([]);
+        }
+      }
+
+      // text, in device pixels
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      const dpr = canvas!.width / canvas!.clientWidth;
+      const px = (v: number) => v * scale;
+      const small = `${10 * dpr}px "JetBrains Mono", ui-monospace, monospace`;
+      const tiny = `${9 * dpr}px "JetBrains Mono", ui-monospace, monospace`;
+      ctx.font = small;
+      ctx.fillStyle = faint;
+      ctx.fillText('WORLD', px(SCENE.x0), px(0.045));
+      ctx.fillText(`SURPRISE · stored ${writes} of ${frames} moments`, px(PLOT.x0), px(PLOT.y0) - 4 * dpr);
+      ctx.fillText(canvas!.clientWidth < 520 ? 'MEMORY' : `MEMORY · ${K} SLOTS`, px(MEM.x0), px(0.045));
+      ctx.font = tiny;
+      ctx.fillText('write threshold', px(PLOT.x1) - ctx.measureText('write threshold').width, px(yOf(TH)) - 3 * dpr);
+      for (let k = 0; k < K; k++) {
+        const y = top + k * (slotH + gap);
+        const s = slots[k];
+        if (s) {
+          ctx.fillStyle = s.flash > 0.05 ? warn : css('--ink-soft');
+          ctx.fillText(s.label, px(MEM.x0 + 0.1), px(y + slotH / 2) - 2 * dpr);
+          ctx.fillStyle = faint;
+          ctx.fillText(`t = ${s.t.toFixed(1)} s`, px(MEM.x0 + 0.1), px(y + slotH / 2) + 10 * dpr);
+        } else {
+          ctx.fillStyle = faint;
+          ctx.fillText('empty', px(MEM.x0 + 0.03), px(y + slotH / 2) + 3 * dpr);
+        }
+      }
+      ctx.restore();
+    }
+
+    let last = performance.now();
+    function loop(now: number) {
+      const dt = Math.min(0.033, (now - last) / 1000);
+      last = now;
+      if (!paused) step(dt);
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+    if (reduce) { for (let i = 0; i < 720; i++) step(1 / 60); }
+    requestAnimationFrame(loop);
+
+    const btn = document.querySelector('.keepsake .pause') as HTMLButtonElement | null;
+    const label = () => { if (btn) { btn.textContent = paused ? '▶' : '❚❚'; btn.setAttribute('aria-label', paused ? 'Play animation' : 'Pause animation'); } };
+    label();
+    btn?.addEventListener('click', () => { paused = !paused; last = performance.now(); label(); });
+  }
+</script>
+
+<style>
+  .keepsake { margin: 0; }
+  .frame { position: relative; border: 1px solid var(--rule); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); background: var(--canvas-bg); }
+  canvas { display: block; width: 100%; }
+  .pause { position: absolute; right: 10px; bottom: 10px; width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--rule); background: var(--bg-raised); color: var(--ink-soft); font-size: .7rem; cursor: pointer; }
+  .pause:hover { color: var(--accent); border-color: var(--accent); }
+  figcaption { margin-top: .9rem; font-size: .95rem; color: var(--ink-soft); }
+  figcaption p { margin: .6rem 0 0; max-width: 60ch; }
+  .key { display: inline-flex; align-items: center; gap: .4em; margin-right: 1.1rem; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: .7rem; letter-spacing: .04em; color: var(--ink-faint); }
+  .key i { display: inline-block; width: 10px; height: 10px; }
+  .k-agent { background: var(--accent); border-radius: 50%; }
+  .k-box { background: var(--ink); }
+  .k-ghost { border: 1.5px dashed var(--warn); }
+  .k-warn { background: var(--warn); border-radius: 50%; }
+</style>

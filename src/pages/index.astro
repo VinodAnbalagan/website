@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
-import OcclusionHero from '../components/OcclusionHero.astro';
-import { site, links, reverieLab, arxiv, writing, fmtDate } from '../data/site';
+import KeepsakeHero from '../components/KeepsakeHero.astro';
+import { site, links, paperLab, project, arxiv, writing, fmtDate } from '../data/site';
 
 const latest = [...writing].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3);
 
@@ -19,18 +19,18 @@ const latest = [...writing].sort((a, b) => b.date.localeCompare(a.date)).slice(0
       </div>
     </div>
     <div class="figure">
-      <OcclusionHero />
+      <KeepsakeHero />
     </div>
   </section>
 
   <section class="block wrap">
     <p class="eyebrow">Now</p>
     <div class="grid-3">
-      <a class="card reveal" href="/research#reverie">
+      <a class="card reveal" href={project.anchor}>
         <span class="pill live">In progress</span>
-        <h3>Reverie</h3>
-        <p>Does a world model represent what it cannot see? Probing and patching an RSSM while a ball is hidden behind an occluder.</p>
-        <span class="meta">Research · world models</span>
+        <h3>{project.name}</h3>
+        <p>{project.question} A world-model planner that writes to a small, fixed memory only when its own prediction fails, measured on success and speed.</p>
+        <span class="meta">Research · world models · robot learning</span>
       </a>
       <a class="card reveal" href={arxiv.url || '/research#culturalriddles'} target={arxiv.url ? '_blank' : undefined} rel="noopener">
         <span class="pill">arXiv · MRL 2026 · TACL</span>
@@ -40,9 +40,9 @@ const latest = [...writing].sort((a, b) => b.date.localeCompare(a.date)).slice(0
       </a>
       <a class="card reveal" href="/lab">
         <span class="pill live">In progress</span>
-        <h3>Lab · The World</h3>
-        <p>Building the simulator for Reverie, with hidden-collision labels.</p>
-        <span class="meta">Step 1 of {reverieLab.length} toward the Reverie paper</span>
+        <h3>Lab · {paperLab[0].title}</h3>
+        <p>Reproducing LeWorldModel and timing its planner: the reference point for every later number.</p>
+        <span class="meta">Step 1 of {paperLab.length} toward the {project.name} paper</span>
       </a>
     </div>
   </section>
