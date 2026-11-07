@@ -6,6 +6,8 @@ import { site } from '../data/site';
 
 interface Props { title?: string; description?: string; }
 const { title, description = site.description } = Astro.props;
+// Link-preview image (LinkedIn, Slack, etc.): the zen garden banner, cropped to 1200x627 around the raked circle.
+const ogImage = 'https://images.pexels.com/photos/35145770/pexels-photo-35145770.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1200&h=627&crop=bottom';
 const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · ML research`;
 ---
 <!doctype html>
@@ -18,6 +20,13 @@ const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · ML resea
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="627" />
+    <meta property="og:image:alt" content="A raked circle in a Japanese zen garden" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
