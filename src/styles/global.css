@@ -1,52 +1,41 @@
 /* ---------- Theme tokens ---------- */
-/* Light: calligraphy paper, sumi ink, vermilion seal red */
+/* Light: plain white page, ink text, one vermilion accent */
 :root,
 [data-theme='light'] {
-  --bg: #faf7f0;
-  --bg-raised: #fdfbf6;
-  --ink: #1d1a15;
-  --ink-soft: #4f473c;
-  --ink-faint: #8d8474;
-  --rule: #e7e0d0;
+  --bg: #ffffff;
+  --bg-raised: #ffffff;
+  --bg-soft: #f6f6f4;
+  --ink: #16161a;
+  --ink-soft: #4a4a50;
+  --ink-faint: #8b8b92;
+  --rule: #e9e9ec;
   --accent: #a8321c;        /* seal vermilion */
-  --accent-soft: #a8321c17;
-  --warn: #2f4f7f;          /* indigo ink, used for "hidden collision" */
-  --occluder: #efe8d9;
-  --occluder-line: #ddd2bc;
-  --canvas-bg: #fcfaf5;
+  --accent-soft: #a8321c12;
+  --warn: #2f4f7f;
+  --occluder: #f1f1f3;
+  --occluder-line: #dedee3;
+  --canvas-bg: #fbfbfc;
   --shadow: none;
-  --grain-blend: multiply;
-  --grain-opacity: .4;
   color-scheme: light;
 }
 
-/* Dark: ink-stone night */
+/* Dark: near-black */
 [data-theme='dark'] {
-  --bg: #16140f;
-  --bg-raised: #1c1914;
-  --ink: #ebe3d1;
-  --ink-soft: #b2a996;
-  --ink-faint: #7b7364;
-  --rule: #2d2922;
-  --accent: #e07a5f;        /* seal red, lifted for dark */
+  --bg: #111113;
+  --bg-raised: #17171a;
+  --bg-soft: #1c1c20;
+  --ink: #ececee;
+  --ink-soft: #b4b4bb;
+  --ink-faint: #7c7c84;
+  --rule: #2a2a2f;
+  --accent: #e07a5f;
   --accent-soft: #e07a5f1c;
   --warn: #9db6de;
-  --occluder: #221f19;
-  --occluder-line: #332e25;
-  --canvas-bg: #1a1712;
+  --occluder: #1d1d21;
+  --occluder-line: #2f2f35;
+  --canvas-bg: #151518;
   --shadow: none;
-  --grain-blend: screen;
-  --grain-opacity: .18;
   color-scheme: dark;
-}
-
-/* Paper grain and fibres, laid over the whole page */
-body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: 50; pointer-events: none;
-  opacity: var(--grain-opacity);
-  mix-blend-mode: var(--grain-blend);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42 0 0 0 0 .35 0 0 0 0 .24 0 0 0 .16 0'/%3E%3C/filter%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.008 .11' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .42 0 0 0 0 .3 0 0 0 .5 -.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
 }
 
 /* ---------- Base ---------- */
@@ -156,7 +145,7 @@ a.card:hover { border-color: var(--accent); transform: translateY(-2px); color: 
   :root, [data-theme='dark'] {
     --bg: #fff; --bg-raised: #fff; --ink: #111; --ink-soft: #333; --ink-faint: #666; --rule: #ddd; --accent: #111;
   }
-  header.site, footer.site, .no-print, body::before { display: none !important; }
+  header.site, footer.site, .no-print { display: none !important; }
   body { font-size: 10.5pt; }
   a { text-decoration: none; }
 }

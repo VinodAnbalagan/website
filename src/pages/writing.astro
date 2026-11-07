@@ -18,7 +18,10 @@ const groups = ['Research blogs', 'Learning & world models', 'Data & evaluation'
       <ol>
         {writing.filter((e) => e.group === g).sort((a, b) => b.date.localeCompare(a.date)).map((e) => (
           <li>
-            <a href={e.href} target="_blank" rel="noopener">
+            <a class="thumb" href={e.href} target="_blank" rel="noopener" aria-hidden="true" tabindex="-1">
+              {e.img ? <img src={e.img} alt="" loading="lazy" /> : <span />}
+            </a>
+            <a class="txt" href={e.href} target="_blank" rel="noopener">
               <span class="t">{e.title}</span>
               <span class="d">{e.dek}</span>
               {e.byline && <span class="by">{e.byline}</span>}
@@ -35,10 +38,15 @@ const groups = ['Research blogs', 'Learning & world models', 'Data & evaluation'
   .group { margin-top: 2.5rem; }
   ol { list-style: none; padding: 0; margin: 0; }
   li { border-top: 1px solid var(--rule); }
-  li a { display: grid; gap: .2rem; padding: 1.2rem 0; text-decoration: none; }
-  .t { font-size: 1.4rem; line-height: 1.25; }
+  li { display: grid; grid-template-columns: 168px minmax(0, 1fr); gap: 1.3rem; padding: 1.1rem 0; align-items: start; }
+  .thumb { display: block; aspect-ratio: 16 / 10; border-radius: 8px; overflow: hidden; background: var(--bg-soft); border: 1px solid var(--rule); }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s ease; }
+  .thumb:hover img { transform: scale(1.03); }
+  .txt { display: grid; gap: .2rem; text-decoration: none; }
+  @media (max-width: 600px) { li { grid-template-columns: 110px minmax(0, 1fr); gap: .9rem; } }
+  .t { font-size: 1.25rem; line-height: 1.25; }
   .d { color: var(--ink-soft); }
   .by { font-family: 'Inter', system-ui, sans-serif; font-size: .82rem; color: var(--accent); }
-  li a:hover .t { color: var(--accent); }
+  .txt:hover .t { color: var(--accent); }
   .page-head .btn { font-size: .85rem; padding: .55em 1em; }
 </style>
