@@ -19,6 +19,13 @@ export const site = {
     'Open to research engineer, research assistant, and research internship opportunities, as well as funded MS/PhD positions, in world models, embodied AI and robot learning, representation learning, multimodal AI, and scientific ML.',
 };
 
+// Home banner: "Serene Japanese Zen Garden in Spring" by Leongsan Tung on Pexels (free Pexels licence).
+export const banner = {
+  src: 'https://images.pexels.com/photos/35145770/pexels-photo-35145770.jpeg?auto=compress&cs=tinysrgb&w=2400',
+  credit: 'Leongsan Tung',
+  page: 'https://www.pexels.com/photo/serene-japanese-zen-garden-in-spring-35145770/',
+};
+
 export const themes = [
   { title: 'Adaptive world models', text: 'Models of the world that reorganize and refine themselves as the environment and the goal change, instead of staying fixed after training.' },
   { title: 'Structured latents and specialized predictors', text: 'Latent spaces with structure, and small predictive mechanisms that each do one job well, for models that compose and stay efficient.' },

@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import KeepsakeHero from '../components/KeepsakeHero.astro';
-import { site, links, themes, paperLab, project, arxiv, riddles, writing, fmtDate, COHERE_IMG } from '../data/site';
+import { site, links, banner, themes, paperLab, project, arxiv, riddles, writing, fmtDate, COHERE_IMG } from '../data/site';
 
 const latest = [...writing].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 4);
 const ext = (h: string) => (h.startsWith('http') ? '_blank' : undefined);
@@ -9,6 +9,7 @@ const ext = (h: string) => (h.startsWith('http') ? '_blank' : undefined);
 const contact = [
   { label: 'Email', href: `mailto:${site.email}` },
   { label: 'CV', href: '/cv' },
+  { label: 'Writing', href: '/writing' },
   { label: 'GitHub', href: links.github },
   { label: 'LinkedIn', href: links.linkedin },
   { label: 'Hugging Face', href: links.huggingface },
@@ -40,8 +41,11 @@ const work = [
 ];
 ---
 <Base>
+  <div class="banner" style={`background-image: url('${banner.src}')`} role="img" aria-label="A raked circle in a Japanese zen garden">
+    <a class="credit" href={banner.page} target="_blank" rel="noopener">Photo: {banner.credit} / Pexels</a>
+  </div>
   <section class="intro narrow">
-    <img class="photo" src={site.photo} alt="Portrait of Vinod Anbalagan" width="168" height="168" />
+    <img class="photo" src={site.photo} alt="Portrait of Vinod Anbalagan" width="200" height="200" />
     <div class="who">
       <h1>Vinod Anbalagan</h1>
       <p class="role">ML engineer and independent researcher · world models and robot learning · Toronto</p>
@@ -126,14 +130,23 @@ const work = [
 </Base>
 
 <style>
-  .intro { display: flex; align-items: center; gap: clamp(1.4rem, 4vw, 2.4rem); padding: clamp(3rem, 7vw, 5rem) 0 1.6rem; }
-  .photo { width: 168px; height: 168px; border-radius: 50%; object-fit: cover; flex: none; background: var(--bg-soft); }
+  .banner {
+    position: relative; height: clamp(170px, 24vw, 300px);
+    background-size: cover; background-position: center 80%;
+    background-color: var(--bg-soft);
+  }
+  .banner::after { content: ''; position: absolute; inset: auto 0 0 0; height: 45%; background: linear-gradient(to bottom, transparent, var(--bg)); }
+  .credit { position: absolute; right: 12px; top: 10px; z-index: 1; font-family: 'Inter', system-ui, sans-serif; font-size: .68rem; color: #fff; opacity: .8; text-decoration: none; text-shadow: 0 1px 3px #0008; }
+  .credit:hover { opacity: 1; color: #fff; }
+  .intro { position: relative; z-index: 2; display: flex; align-items: flex-end; gap: clamp(1.4rem, 4vw, 2.4rem); margin-top: calc(-1 * clamp(70px, 9vw, 110px)); padding: 0 0 1.6rem; }
+  .photo { border: 5px solid var(--bg); box-shadow: 0 2px 14px #0000001a; }
+  .photo { width: 200px; height: 200px; border-radius: 50%; object-fit: cover; flex: none; background: var(--bg-soft); }
   .intro h1 { font-size: clamp(2.2rem, 5vw, 3rem); margin-bottom: .35rem; }
   .role { color: var(--ink-soft); margin: 0 0 .9rem; font-size: 1.08rem; }
   .contact { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .35rem .5rem; font-family: 'Inter', system-ui, sans-serif; font-size: .82rem; }
   .contact a { display: inline-block; text-decoration: none; padding: .25em .75em; border: 1px solid var(--rule); border-radius: 999px; color: var(--ink-soft); }
   .contact a:hover { border-color: var(--accent); color: var(--accent); }
-  @media (max-width: 600px) { .intro { flex-direction: column; align-items: flex-start; } .photo { width: 120px; height: 120px; } }
+  @media (max-width: 600px) { .intro { flex-direction: column; align-items: flex-start; } .photo { width: 150px; height: 150px; } }
 
   .about p { font-size: 1.12rem; line-height: 1.65; }
   .about .now { color: var(--ink-soft); }
