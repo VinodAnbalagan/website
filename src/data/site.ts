@@ -5,15 +5,15 @@ export const site = {
   role: 'ML engineer · independent researcher · Toronto',
   headline: 'ML Engineer & Independent Researcher · World Models, Robot Learning & Representation Learning',
   identity:
-    'I study what models actually learn, and what they need to remember. Right now: world models that plan for robots, and the leanest memory that keeps them reliable.',
+    'World models as the basis for robot control, and the memory a planning agent needs to act in real time.',
   description:
-    'Vinod Anbalagan: ML engineer and independent researcher working on world models, robot learning, representation learning and evaluation.',
+    'Vinod Anbalagan: ML engineer and independent researcher working on world models for robot control, memory for real-time planning, and evaluation.',
   email: 'vinodanbalagan@gmail.com',
   // Put your headshot at public/me.jpg (square works best). Until then a placeholder is shown.
   photo: '/me.jpg',
   about: [
-    'My broader research interest is in adaptive world models that go beyond fixed latent representations and dynamics, so that agents can organize, compose and refine their internal models of the world as they meet new environments and objectives.',
-    'I am interested in how structured latent spaces and specialized predictive mechanisms could support more general, physically grounded and computationally efficient intelligence, with robotics as the medium where those models meet the real world.',
+    'I’m interested in world models as the basis for robot control, and especially in memory: what a planning agent needs to remember, and how to keep that memory small enough to plan in real time.',
+    'More broadly, I want to work on world models that adapt, where agents organise and refine what they keep as tasks and environments change.',
   ],
   openTo:
     'Open to research engineer, research assistant, and research internship opportunities, as well as funded MS/PhD positions, in world models, embodied AI and robot learning, representation learning, multimodal AI, and scientific ML.',
@@ -27,9 +27,17 @@ export const banner = {
 };
 
 export const themes = [
-  { title: 'Adaptive world models', text: 'Models of the world that reorganize and refine themselves as the environment and the goal change, instead of staying fixed after training.' },
-  { title: 'Structured latents and specialized predictors', text: 'Latent spaces with structure, and small predictive mechanisms that each do one job well, for models that compose and stay efficient.' },
-  { title: 'Robotics as the medium', text: 'Robots are where world models meet physics, real time and limited memory, so they are where these ideas get tested.' },
+  { title: 'World models for robot control', text: 'Planning inside a learned model of the world, from pixels, as the basis for acting, with speed counted alongside success.' },
+  { title: 'Memory for real-time planning', text: 'What a planning agent needs to remember, what should decide it, and how small that memory can stay.' },
+  { title: 'World models that adapt', text: 'Agents that organise and refine what they keep as tasks and environments change.' },
+];
+
+// Short, dated items for the home page. Newest first.
+export const news = [
+  { date: 'Nov 2026', text: 'Keepsake revised: it now compares five write rules for a small memory, with plan change as the new signal.', href: '/research#keepsake' },
+  { date: 'Oct 2026', text: 'CulturalRiddles is on arXiv, with a Cohere Labs research blog I co-wrote and a public results dashboard I built.', href: 'https://arxiv.org/abs/2610.29968' },
+  { date: 'Oct 2026', text: 'Finished The Architecture of Dreams, a three-part series on world models, on The Meta Gradient.', href: 'https://vinodanbalagan.substack.com/p/the-architecture-of-dreams-part-3' },
+  { date: '2026', text: '2nd place, Data and Visualization track, Adaption Labs AutoScientist Challenge.', href: '/cv' },
 ];
 
 export const links = {
@@ -59,7 +67,7 @@ export type Status = 'planned' | 'next' | 'building' | 'shipped';
 export const project = {
   name: 'Keepsake',
   question: 'What should a robot remember?',
-  paperTitle: 'What Should a Robot Remember? Surprise as a Guide to Lean Memory in Real-Time World-Model Planning',
+  paperTitle: 'What Should a Robot Remember? Plan Change as a Write Signal for Lean Memory in World-Model Planning',
   anchor: '/research#keepsake',
 };
 
@@ -76,31 +84,30 @@ export interface LabProject {
 // Section 1: the six steps that make up the Keepsake paper, in order.
 export const paperLab: LabProject[] = [
   { n: '01', title: 'The Baseline', theme: 'Foundations', status: 'building',
-    question: 'Reproduce LeWorldModel, a small JEPA world model that plans from pixels, on one of its tasks. Measure success rate and planning time per decision on my own hardware, so every later number has a reference point.',
+    question: 'Reproduce LeWorldModel, a small JEPA world model that plans from pixels, on one of its tasks. Measure success rate and planning time per decision on my own hardware, and check whether the planner can show the plan it held before and after each new observation.',
     ladder: 'planning horizon 5 → 10 → 20 steps' },
-  { n: '02', title: 'The Surprise Audit', theme: 'Surprise', status: 'next',
-    question: "Before building any memory: log the world model's own prediction error on a disappearing-cue task and a moved-object task, and compare it with hand-labelled moments that matter. Does surprise still fire for the cue once the model has learned when cues appear? How often does it flag what matters, and how often what does not?",
-    ladder: 'event type: outside change → self-caused progress → irrelevant distractor' },
-  { n: '03', title: 'Tasks That Need Memory', theme: 'Environment', status: 'planned',
-    question: 'Variants of standard planning tasks where the current frame cannot tell you what to do next: a goal cue that disappears, and an object moved mid-task. Does the memoryless planner fail and the oracle succeed, as they should?',
-    ladder: 'cue-to-decision delay short → medium → long' },
+  { n: '02', title: 'Tasks That Need Memory', theme: 'Environment', status: 'next',
+    question: 'Hidden-state tasks, where the outcome of an action depends on something no longer visible: a controlled diagnostic task and a standard benchmark task, the shell game. Does the memoryless planner fail and an oracle given the hidden state succeed, as they should?',
+    ladder: 'information hidden for short → medium → long' },
+  { n: '03', title: 'The Signal Audit', theme: 'Signals', status: 'planned',
+    question: "Before building any memory: log two signals, the world model's surprise and whether each observation changed the plan, and compare them with labelled moments that matter, including under distractors, recolouring and repeated frames. Which signal marks what is worth remembering?",
+    ladder: 'change that matters → distractor → appearance only → own progress' },
   { n: '04', title: 'Remembering Everything', theme: 'Memory', status: 'planned',
-    question: 'The expensive answers: stack recent frames, give the predictor a recurrent state, or keep every past state and attend over all of it, plus an oracle handed the true task state. These set the ceiling and the price.',
+    question: 'The expensive answers: stack recent frames, give the predictor a recurrent state, add always-on learned slots, or keep every past state and attend over all of it, plus an oracle handed the hidden state. These set the ceiling and the price.',
     ladder: 'history length 4 → 16 → full episode' },
-  { n: '05', title: 'The Surprise Gate', theme: 'Selection', status: 'planned',
-    question: 'Two claims, tested separately. Does a small, fixed memory recover most of what full history gives, at lower cost, whatever decides what is written? And does writing on surprise beat writing at fixed intervals or at random, with the same number of slots?',
-    ladder: 'memory slots 4 → 8 → 16' },
+  { n: '05', title: 'The Write Rule', theme: 'Selection', status: 'planned',
+    question: 'One model, one memory budget, five rules for what gets written: time, chance, surprise, plan change, and surprise weighted by plan change. Which fills a small memory best, and does what it keeps really guide the plan?',
+    ladder: 'time → chance → surprise → plan change → both' },
   { n: '06', title: 'The Price of Memory', theme: 'Speed', status: 'planned',
-    question: 'Success rate against planning time per decision, for every memory variant, over several seeds. Where does each kind of memory sit on the trade-off between reliability and speed?',
-    ladder: 'memory none → compact → recurrent → full history' },
+    question: 'Success rate against planning time per decision as episodes get longer, for every memory variant, over several seeds. Where does each kind of memory sit on the trade-off between reliability and speed?',
+    ladder: 'episode length short → long → very long' },
 ];
 
 // Section 2: experiments that come after the paper.
 export const afterLab: { title: string; note?: string }[] = [
   { title: 'On a Real Arm', note: 'The same planner and memory on a low-cost arm with a camera' },
   { title: 'Another Body', note: 'The same memory, unchanged, on a simulated drone' },
-  { title: 'Lessons Across Episodes', note: 'Distilled experience in a compact graph, recalled only when surprised' },
-  { title: 'Fast Typed Heads', note: 'Small heads that answer one question each, like "is this subtask done?", in a single pass' },
+  { title: 'Lessons Across Episodes', note: 'Distilled experience in a compact graph, recalled only when needed' },
   { title: 'Memory in the World', note: 'Can an agent learn to leave itself traces in the scene?' },
   { title: 'Many Bodies', note: 'A leader steering followers through a learned world model' },
 ];

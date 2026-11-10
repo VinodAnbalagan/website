@@ -2,36 +2,28 @@
 import Base from '../layouts/Base.astro';
 import { links, arxiv, riddles, project, paperLab } from '../data/site';
 
-const knobs = [
-  { k: 'Learning rule', d: 'Backprop versus local and biologically inspired alternatives.', now: false },
-  { k: 'Architecture', d: 'Symmetry and equivariance built into the network.', now: false },
-  { k: 'Objective', d: 'Predictive world models: physical state or surface statistics?', now: false },
-  { k: 'Memory', d: 'What must a world model keep to act well, and what does keeping it cost?', now: true },
+const ways = [
+  ['Controlled tasks', 'Environments with ground-truth state, built so the question has a checkable answer.'],
+  ['Equal terms', 'One model, one budget, matched baselines and ablations, several seeds.'],
+  ['Speed counts', 'Planning time per decision is reported next to success, not after it.'],
+  ['Stated first', 'Hypotheses written down before results, and negative results reported.'],
 ];
 ---
-<Base title="Research" description="Keepsake, a study of lean memory for real-time world-model planning, and CulturalRiddles, a multicultural riddles benchmark.">
+<Base title="Research" description="Keepsake, a study of what a world-model planner should write into a small memory, and CulturalRiddles, a multicultural riddles benchmark.">
   <header class="page-head narrow">
     <p class="eyebrow">Research</p>
-    <h1>When a model succeeds, has it learned the structure, or the surface cues?</h1>
+    <h1>What does a planning agent need to remember?</h1>
     <p class="lede">
-      One question runs through the work: what a model actually learns, and what it needs to keep,
-      when you constrain how it learns. I answer it with controlled environments, matched baselines,
-      probes and causal tests rather than leaderboard scores.
+      I work on world models as the basis for robot control, and on memory in particular: what a planner
+      must keep, and how to keep it small enough to plan in real time.
     </p>
   </header>
 
   <section class="narrow program reveal">
-    <p class="eyebrow">The programme · one question, four knobs, one toolkit</p>
-    <div class="knobs">
-      {knobs.map((x) => (
-        <div class:list={['knob', { now: x.now }]}>
-          <span class="mono label">{x.now ? 'now' : 'later'}</span>
-          <h3>{x.k}</h3>
-          <p>{x.d}</p>
-        </div>
-      ))}
-    </div>
-    <p class="meta tools">Instruments held constant: environments with ground-truth state · matched baselines and ablations · linear and nonlinear probing · activation patching · hypotheses stated before results, negative results reported</p>
+    <p class="eyebrow">How I work</p>
+    <ul class="ways">
+      {ways.map(([h, d]) => <li><strong>{h}</strong><span>{d}</span></li>)}
+    </ul>
   </section>
 
   <article id="keepsake" class="narrow paper reveal">
@@ -45,29 +37,26 @@ const knobs = [
 
     <h4 class="mono">Abstract</h4>
     <p>
-      Most robot foundation models have no memory: they act on the current camera frame alone. That
-      works until the frame stops telling you how far along you are: identical objects, a cue that has
-      disappeared, something hidden from view. Giving a model memory the obvious way is expensive. Ten
-      seconds of video from four cameras at 50 Hz is about half a million tokens.
+      A robot that acts only on its current camera frame fails as soon as the frame stops showing what it
+      needs: an object that is now hidden, a cue that has disappeared. Memory fixes that, at a price, and
+      inside a sampling-based planner the price is multiplied, because the world model reads its memory at
+      every step of every imagined rollout.
     </p>
     <p>
-      {project.name} tests a lean alternative inside a latent world-model planner. The planner runs
-      without memory by default. When its own one-step prediction turns out wrong, it writes that moment
-      into a small, fixed-size memory, and plans with it. Surprise is treated as a hypothesis, not a
-      definition of importance: it may miss progress the robot caused itself, and fire on changes that
-      do not matter. On tasks built so that the current frame is not enough, it is compared against no
-      memory, frame stacking, a recurrent state, full history and an oracle given the true task state.
-      Two claims are tested separately: whether a compact memory is worth its cost, and whether surprise
-      is a good way to choose what goes into it.
+      {project.name} studies the choice a small memory forces: what gets written. On one trained world model
+      with one fixed memory budget, it compares five write rules: time, chance, the model's own surprise,
+      whether an observation changed the plan, and the two combined. Plan change is something only a planner
+      can measure about itself. A moving distractor is surprising but leaves the plan untouched; an object
+      that is not where it should be changes it. Reliability and planning time are reported together, on
+      tasks that cannot be solved from the current frame.
     </p>
     <p class="prior">
-      Closest prior work gates episodic memory on surprise to help a language-model agent answer questions
-      about what a robot saw, and does not report timing. {project.name} uses the planner's own
-      action-conditioned prediction error, puts the memory inside the control loop, and treats speed as a
-      primary result.
+      Prior work gates memory on surprise, learns when to write end to end, or adds always-on memory slots,
+      usually around a policy and rarely with timing. {project.name} compares write signals on equal terms
+      inside a planner and checks that what the memory keeps actually guides the plan.
     </p>
-    <p class="meta">JEPA world model · latent planning · event memory · simulation first, then a real arm</p>
-    <p class="note">The animation on the <a href="/">home page</a> sketches the idea. It is an illustration, not model output.</p>
+    <p class="meta">JEPA world model · latent planning · write rules for a fixed memory · simulation first, then a robot arm</p>
+    <p class="note">The animation on the <a href="/">home page</a> sketches one of the five rules, surprise. It is an illustration, not model output.</p>
   </article>
 
   <article id="culturalriddles" class="narrow paper reveal">
@@ -141,15 +130,12 @@ const knobs = [
 
 <style>
   .program { margin-bottom: 1rem; }
-  .knobs { display: grid; grid-template-columns: repeat(2, 1fr); gap: .8rem; }
-  .knob { border: 1px solid var(--rule); border-radius: 14px; padding: 1.1rem 1.1rem 1rem; background: var(--bg-raised); }
-  .knob.now { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
-  .knob h3 { font-size: 1.15rem; margin: .4rem 0 .35rem; }
-  .knob p { font-size: .95rem; color: var(--ink-soft); margin: 0; }
-  .label { font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
-  .knob.now .label { color: var(--accent); }
-  .tools { margin-top: 1rem; }
-  @media (max-width: 640px) { .knobs { grid-template-columns: 1fr; } }
+  .page-head .lede { max-width: 52ch; }
+  .ways { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.1rem 2rem; }
+  .ways li { display: grid; gap: .15rem; }
+  .ways strong { font-weight: 500; font-size: 1.08rem; }
+  .ways span { color: var(--ink-soft); font-size: .97rem; }
+  @media (max-width: 640px) { .ways { grid-template-columns: 1fr; } }
 
   .paper { padding: 3.5rem 0 1rem; border-top: 1px solid var(--rule); margin-top: 3rem; scroll-margin-top: 80px; }
   .tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.2rem; }

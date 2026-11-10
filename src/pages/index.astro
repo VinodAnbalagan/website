@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import KeepsakeHero from '../components/KeepsakeHero.astro';
-import { site, links, banner, themes, paperLab, project, arxiv, riddles, writing, fmtDate, COHERE_IMG } from '../data/site';
+import { site, links, banner, themes, news, paperLab, project, arxiv, riddles, writing, fmtDate, COHERE_IMG } from '../data/site';
 
 const latest = [...writing].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 4);
 const ext = (h: string) => (h.startsWith('http') ? '_blank' : undefined);
@@ -59,8 +59,9 @@ const work = [
     {site.about.map((p) => <p>{p}</p>)}
     <p class="now">
       Right now I am building <a href={project.anchor}>{project.name}</a>: {project.question.toLowerCase()}{' '}
-      It tests whether a world model's own surprise is a good guide to what goes into a small, fixed memory
-      for real-time planning.
+      It compares the signals that could decide what a world-model planner writes into a small, fixed memory,
+      including a new one: whether an observation changed the plan. Reliability and planning speed are measured
+      together, on tasks that cannot be solved from the current camera frame.
     </p>
   </section>
 
@@ -79,6 +80,15 @@ const work = [
         </div>
       ))}
     </div>
+  </section>
+
+  <section class="narrow block-s">
+    <h2 class="sec">News</h2>
+    <ul class="news">
+      {news.map((n) => (
+        <li><span class="when">{n.date}</span><a href={n.href} target={ext(n.href)} rel="noopener">{n.text}</a></li>
+      ))}
+    </ul>
   </section>
 
   <section class="narrow block-s">
@@ -160,6 +170,12 @@ const work = [
   .theme p { font-size: .97rem; color: var(--ink-soft); margin: 0; }
   .num { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: .7rem; color: var(--accent); }
   @media (max-width: 680px) { .themes { grid-template-columns: 1fr; } }
+
+  .news { list-style: none; padding: 0; margin: 0; }
+  .news li { display: grid; grid-template-columns: 6.2rem minmax(0, 1fr); gap: 1rem; padding: .5rem 0; font-size: 1.02rem; }
+  .news .when { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: .74rem; color: var(--ink-faint); padding-top: .35rem; }
+  .news a { text-decoration: none; color: var(--ink-soft); }
+  .news a:hover { color: var(--accent); }
 
   .list { list-style: none; padding: 0; margin: 0; }
   .list li { display: grid; grid-template-columns: 168px minmax(0, 1fr); gap: 1.3rem; padding: 1.1rem 0; border-bottom: 1px solid var(--rule); align-items: start; }
