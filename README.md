@@ -18,11 +18,11 @@ When a Lab project ships, set its `status` to `'shipped'` and add an `href`.
 | Page | File |
 | --- | --- |
 | Home | `src/pages/index.astro` |
-| Research (Keepsake, CulturalRiddles) | `src/pages/research.astro` |
+| Research (Notch, CulturalRiddles) | `src/pages/research.astro` |
 | Lab | `src/pages/lab.astro` |
 | Writing | `src/pages/writing.astro` |
 | CV | `src/pages/cv.astro` |
-| Hero animation | `src/components/KeepsakeHero.astro` |
+| Hero animation (Notch) | `src/components/KeepsakeHero.astro` |
 | Colours, fonts, light/dark themes | `src/styles/global.css` |
 
 ## Deploy

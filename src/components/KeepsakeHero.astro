@@ -1,13 +1,13 @@
 ---
-// Live illustration of the Keepsake question.
+// Live illustration of the Notch question.
 // An agent works through identical boxes. Its routine is predictable, so surprise stays low and nothing
 // is stored. Now and then a box is moved by something outside the agent's control: the world model's
 // prediction fails, surprise crosses the threshold, and that moment is written to a small fixed memory.
 // This is an illustration of the idea, not model output.
 ---
-<figure class="keepsake">
+<figure class="notch-hero">
   <div class="frame">
-    <canvas id="keepsake-canvas" aria-label="Animated sketch: an agent visits identical boxes. A surprise trace runs along the bottom. When a box is moved unexpectedly, surprise spikes above a threshold and the moment is written into one of four memory slots."></canvas>
+    <canvas id="notch-canvas" aria-label="Animated sketch: an agent visits identical boxes. A surprise trace runs along the bottom. When a box is moved unexpectedly, surprise spikes above a threshold and the moment is written into one of four memory slots."></canvas>
     <button class="pause no-print" type="button" aria-label="Pause animation">❚❚</button>
   </div>
   <figcaption>
@@ -18,7 +18,7 @@
     <p>
       One candidate signal, sketched: surprise. Most moments are predictable, so nothing is stored; when the
       world does something the model did not predict, that moment is written to a small, fixed memory.
-      Keepsake compares this rule with four others, including whether the observation changed the plan.
+      Notch compares this rule with four others, including whether the observation changed the plan.
       An illustration, not model output.
     </p>
   </figcaption>
@@ -29,7 +29,7 @@
   type Ghost = { x: number; y: number; life: number };
   type Slot = { label: string; t: number; flash: number };
 
-  const canvas = document.getElementById('keepsake-canvas') as HTMLCanvasElement | null;
+  const canvas = document.getElementById('notch-canvas') as HTMLCanvasElement | null;
   if (canvas) {
     const ctx = canvas.getContext('2d')!;
     const W = 2, H = 1;
@@ -254,7 +254,7 @@
     if (reduce) { for (let i = 0; i < 720; i++) step(1 / 60); }
     requestAnimationFrame(loop);
 
-    const btn = document.querySelector('.keepsake .pause') as HTMLButtonElement | null;
+    const btn = document.querySelector('.notch-hero .pause') as HTMLButtonElement | null;
     const label = () => { if (btn) { btn.textContent = paused ? '▶' : '❚❚'; btn.setAttribute('aria-label', paused ? 'Play animation' : 'Pause animation'); } };
     label();
     btn?.addEventListener('click', () => { paused = !paused; last = performance.now(); label(); });
@@ -262,7 +262,7 @@
 </script>
 
 <style>
-  .keepsake { margin: 0; }
+  .notch-hero { margin: 0; }
   .frame { position: relative; border: 1px solid var(--rule); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); background: var(--canvas-bg); }
   canvas { display: block; width: 100%; }
   .pause { position: absolute; right: 10px; bottom: 10px; width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--rule); background: var(--bg-raised); color: var(--ink-soft); font-size: .7rem; cursor: pointer; }

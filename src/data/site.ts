@@ -34,7 +34,7 @@ export const themes = [
 
 // Short, dated items for the home page. Newest first.
 export const news = [
-  { date: 'Nov 2026', text: 'Keepsake revised: it now compares five write rules for a small memory, with plan change as the new signal.', href: '/research#keepsake' },
+  { date: 'Nov 2026', text: 'Notch revised: it now compares five write rules for a small memory, with plan change as the new signal.', href: '/research#notch' },
   { date: 'Oct 2026', text: 'CulturalRiddles is on arXiv, with a Cohere Labs research blog I co-wrote and a public results dashboard I built.', href: 'https://arxiv.org/abs/2610.29968' },
   { date: 'Oct 2026', text: 'Finished The Architecture of Dreams, a three-part series on world models, on The Meta Gradient.', href: 'https://vinodanbalagan.substack.com/p/the-architecture-of-dreams-part-3' },
   { date: '2026', text: '2nd place, Data and Visualization track, Adaption Labs AutoScientist Challenge.', href: '/cv' },
@@ -65,10 +65,10 @@ export type Status = 'planned' | 'next' | 'building' | 'shipped';
 
 // The current research project. Rename it here and the Lab, home and research pages follow.
 export const project = {
-  name: 'Keepsake',
+  name: 'Notch',
   question: 'What should a robot remember?',
   paperTitle: 'What Should a Robot Remember? Plan Change as a Write Signal for Lean Memory in World-Model Planning',
-  anchor: '/research#keepsake',
+  anchor: '/research#notch',
 };
 
 export interface LabProject {
@@ -81,7 +81,7 @@ export interface LabProject {
   href?: string; // set once the article exists, e.g. '/lab/01-the-baseline'
 }
 
-// Section 1: the six steps that make up the Keepsake paper, in order.
+// Section 1: the six steps that make up the Notch paper, in order.
 export const paperLab: LabProject[] = [
   { n: '01', title: 'The Baseline', theme: 'Foundations', status: 'building',
     question: 'Reproduce LeWorldModel, a small JEPA world model that plans from pixels, on one of its tasks. Measure success rate and planning time per decision on my own hardware, and check whether the planner can show the plan it held before and after each new observation.',

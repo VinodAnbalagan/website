@@ -22,7 +22,7 @@ const work = [
     sub: project.paperTitle,
     status: 'In progress · preprint planned for December 2026',
     href: project.anchor,
-    thumb: 'keepsake',
+    thumb: 'notch',
     tags: [{ label: 'Abstract', href: project.anchor }, { label: 'Lab', href: '/lab' }],
   },
   {
@@ -97,7 +97,7 @@ const work = [
       {work.map((w) => (
         <li>
           <a class="thumb" href={w.href} target={ext(w.href)} rel="noopener" aria-hidden="true" tabindex="-1">
-            {w.thumb === 'keepsake'
+            {w.thumb === 'notch'
               ? <svg viewBox="0 0 120 75" class="ks"><rect x="14" y="40" width="16" height="16" rx="2"/><rect x="52" y="40" width="16" height="16" rx="2"/><rect x="90" y="40" width="16" height="16" rx="2" class="ghost"/><circle cx="60" cy="22" r="6" class="agent"/><path d="M8 66 H112" class="line"/></svg>
               : <img src={w.thumb} alt="" loading="lazy" />}
           </a>
